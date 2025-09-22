@@ -110,15 +110,15 @@
             <div class="mt-auto">
                 <div class="bg-gray-700/50 dark:bg-gray-800 rounded-lg p-4 text-center">
                     <p class="text-sm text-gray-200">Have a question?</p>
-                    <p class="text-xs text-gray-400 mt-1">Reach out to us via phone or email.</p>
+                    <p class="text-xs text-gray-400 mt-1">Reach out to gundu via phone or email.</p>
                     <div class="mt-4 flex space-x-2">
                          <a href="tel:+918123084877" class="flex-1 flex items-center justify-center space-x-2 bg-gray-600 hover:bg-gray-500 text-white text-sm py-2 rounded-lg transition-colors duration-200">
                              <i data-lucide="phone" class="w-4 h-4"></i>
-                             <span>Call Us</span>
+                             <span>Call</span>
                          </a>
                          <a href="mailto:manishreddynakkala@gmail.com" class="flex-1 flex items-center justify-center space-x-2 bg-teal-500 hover:bg-teal-600 text-white text-sm py-2 rounded-lg transition-colors duration-200">
                              <i data-lucide="mail" class="w-4 h-4"></i>
-                             <span>Email Us</span>
+                             <span>Email</span>
                          </a>
                     </div>
                 </div>
@@ -654,6 +654,47 @@
                 <div class="mt-8 flex justify-end space-x-3">
                     <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 dark:bg-gray-600 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-500">Cancel</button>
                     <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Income Modal -->
+    <div id="edit-income-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
+            <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Edit Income</h2>
+            <form id="edit-income-form">
+                <input type="hidden" id="edit-income-id">
+                <div class="space-y-4">
+                    <div>
+                        <label for="edit-income-amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (₹)</label>
+                        <input type="number" id="edit-income-amount" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="edit-income-date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date Received</label>
+                        <input type="date" id="edit-income-date" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    <div>
+                        <label for="edit-income-source" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Source</label>
+                        <select id="edit-income-source" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                           <!-- Populated from sources -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit-income-account" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Deposit To</label>
+                        <select id="edit-income-account" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                            <option value="main">Main Account</option>
+                            <option value="savings">Savings</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="edit-income-notes" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Notes (Optional)</label>
+                        <textarea id="edit-income-notes" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"></textarea>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 dark:bg-gray-600 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-500">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -1439,6 +1480,7 @@
             // --- INCOME PAGE LOGIC ---
             const addIncomeForm = document.getElementById('add-income-form');
             const incomeHistoryList = document.getElementById('income-history-list');
+            const editIncomeForm = document.getElementById('edit-income-form');
             const totalIncomeMonthEl = document.getElementById('total-income-month');
             const addSourceForm = document.getElementById('add-source-form');
             const incomeSourcesList = document.getElementById('income-sources-list');
@@ -1452,12 +1494,17 @@
             };
 
             const populateIncomeSourceDropdowns = () => {
-                const select = document.getElementById('income-source');
-                let options = '<option value="">Select a Source</option>';
-                state.incomeSources.forEach(source => {
-                    options += `<option value="${source.name}">${source.name}</option>`;
+                const selects = [
+                    document.getElementById('income-source'),
+                    document.getElementById('edit-income-source')
+                ];
+                selects.forEach(select => {
+                    let options = '<option value="">Select a Source</option>';
+                    state.incomeSources.forEach(source => {
+                        options += `<option value="${source.name}">${source.name}</option>`;
+                    });
+                    select.innerHTML = options;
                 });
-                select.innerHTML = options;
             };
 
             const renderIncomeHistory = () => {
@@ -1471,14 +1518,19 @@
                 
                 sortedIncome.forEach(inc => {
                     content += `
-                        <div class="grid grid-cols-10 gap-2 items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 text-sm">
+                        <div class="grid grid-cols-12 gap-2 items-center p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 text-sm">
                             <span class="col-span-2 text-gray-600 dark:text-gray-400">${new Date(inc.date).toLocaleDateString('en-GB')}</span>
                             <span class="col-span-3 font-medium text-green-700 dark:text-green-400">${inc.source}</span>
                             <span class="col-span-3 text-gray-500 dark:text-gray-400 truncate" title="${inc.notes}">${inc.notes || 'N/A'}</span>
                             <span class="col-span-2 font-semibold text-right text-green-600 dark:text-green-500">${formatCurrency(inc.amount)}</span>
+                             <div class="col-span-2 flex justify-end space-x-2">
+                                <button data-id="${inc.id}" class="edit-income-btn text-gray-400 hover:text-blue-500"><i data-lucide="edit" class="w-4 h-4 pointer-events-none"></i></button>
+                                <button data-id="${inc.id}" class="delete-income-btn text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i></button>
+                            </div>
                         </div>`;
                 });
                 incomeHistoryList.innerHTML = content;
+                lucide.createIcons();
             };
 
             const renderIncomeSummary = () => {
@@ -1562,6 +1614,101 @@
                 }
             });
             
+            incomeHistoryList.addEventListener('click', async (e) => {
+                const editBtn = e.target.closest('.edit-income-btn');
+                const deleteBtn = e.target.closest('.delete-income-btn');
+
+                if (editBtn) {
+                    const incomeId = parseInt(editBtn.dataset.id);
+                    const incomeToEdit = state.income.find(inc => inc.id === incomeId);
+                    if (incomeToEdit) {
+                        document.getElementById('edit-income-id').value = incomeToEdit.id;
+                        document.getElementById('edit-income-amount').value = incomeToEdit.amount;
+                        document.getElementById('edit-income-date').value = incomeToEdit.date;
+                        document.getElementById('edit-income-source').value = incomeToEdit.source;
+                        document.getElementById('edit-income-account').value = incomeToEdit.depositAccount;
+                        document.getElementById('edit-income-notes').value = incomeToEdit.notes;
+                        showModal('edit-income-modal');
+                    }
+                }
+
+                if (deleteBtn) {
+                    const incomeId = parseInt(deleteBtn.dataset.id);
+                    const incomeToDelete = state.income.find(inc => inc.id === incomeId);
+                    if (incomeToDelete) {
+                        const account = state.accounts.find(a => a.account_name.toLowerCase().startsWith(incomeToDelete.depositAccount));
+                        
+                        const newBalance = account.balance - incomeToDelete.amount;
+                        
+                        const { error: updateError } = await db.from('accounts').update({ balance: newBalance }).eq('id', account.id);
+                        if (updateError) {
+                            console.error("Error updating account balance on delete:", updateError);
+                            return;
+                        }
+
+                        const { error: deleteError } = await db.from('income').delete().eq('id', incomeId);
+                        if (deleteError) {
+                            console.error("Error deleting income:", deleteError);
+                            // Revert balance change if delete fails
+                            await db.from('accounts').update({ balance: account.balance }).eq('id', account.id);
+                            return;
+                        }
+
+                        // Update state
+                        account.balance = newBalance;
+                        state.income = state.income.filter(inc => inc.id !== incomeId);
+
+                        // Re-render
+                        renderAllBalances();
+                        renderIncomePage();
+                        renderTransactions();
+                        updateBalanceChart(state.totalBalance);
+                    }
+                }
+            });
+
+            editIncomeForm.addEventListener('submit', async(e) => {
+                e.preventDefault();
+                const id = parseInt(document.getElementById('edit-income-id').value);
+                const originalIncome = state.income.find(inc => inc.id === id);
+
+                const newAmount = parseFloat(document.getElementById('edit-income-amount').value);
+                const newDate = document.getElementById('edit-income-date').value;
+                const newSourceName = document.getElementById('edit-income-source').value;
+                const newAccountName = document.getElementById('edit-income-account').value;
+                const newNotes = document.getElementById('edit-income-notes').value;
+                
+                const newSource = state.incomeSources.find(s => s.name === newSourceName);
+                if (!newSource) return;
+
+                const originalAccount = state.accounts.find(a => a.account_name.toLowerCase().startsWith(originalIncome.depositAccount));
+                const newAccount = state.accounts.find(a => a.account_name.toLowerCase().startsWith(newAccountName));
+                
+                // Revert old transaction
+                originalAccount.balance -= originalIncome.amount;
+
+                // Apply new transaction
+                newAccount.balance += newAmount;
+
+                // DB Updates
+                await db.from('income').update({
+                    amount: newAmount,
+                    income_date: newDate,
+                    source_id: newSource.id,
+                    account_id: newAccount.id,
+                    notes: newNotes
+                }).eq('id', id);
+
+                await db.from('accounts').update({ balance: originalAccount.balance }).eq('id', originalAccount.id);
+                if (originalAccount.id !== newAccount.id) {
+                    await db.from('accounts').update({ balance: newAccount.balance }).eq('id', newAccount.id);
+                }
+
+                // Easiest to just reload all data to ensure consistency
+                await loadInitialData();
+                hideModal(document.getElementById('edit-income-modal'));
+            });
+
             const renderIncomeSourcesList = () => {
                 incomeSourcesList.innerHTML = state.incomeSources.map(source => `
                     <div class="flex justify-between items-center p-2 rounded-lg bg-gray-50 dark:bg-gray-700/50">
@@ -1767,13 +1914,11 @@
 
             const applyTheme = (theme) => {
                 const lightActiveClasses = ['bg-white', 'text-gray-900'];
-                const darkActiveClasses = ['bg-white', 'dark:bg-gray-500', 'text-gray-900', 'dark:text-white'];
+                const darkActiveClasses = ['bg-gray-900', 'text-white', 'dark:bg-gray-500'];
                 
-                // Remove all possible active classes from both buttons first
-                themeLightBtn.classList.remove(...lightActiveClasses);
-                themeLightBtn.classList.remove(...darkActiveClasses); // a bit redundant but safe
-                themeDarkBtn.classList.remove(...lightActiveClasses);
-                themeDarkBtn.classList.remove(...darkActiveClasses);
+                // Reset both buttons
+                themeLightBtn.classList.remove(...lightActiveClasses, ...darkActiveClasses);
+                themeDarkBtn.classList.remove(...lightActiveClasses, ...darkActiveClasses);
 
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark');
@@ -1783,7 +1928,7 @@
                     themeLightBtn.classList.add(...lightActiveClasses);
                 }
                 
-                // Re-initialize charts to update colors
+                // Re-initialize charts to update colors for axes and ticks
                 if (document.getElementById('overview-page').offsetParent !== null) {
                     initializeOverviewCharts();
                 }
@@ -1794,7 +1939,6 @@
                 if (preferredTheme) {
                     applyTheme(preferredTheme);
                 } else {
-                    // Apply system preference if no local storage is set
                     applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
                 }
             };
