@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FinBuddy - Financial Dashboard</title>
     
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
 
+    <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
+    <!-- Supabase JS Client CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -53,6 +58,9 @@
 <body class="text-gray-800">
 
     <div class="flex h-screen">
+        <!-- =================================================================
+            LEFT NAVIGATION SIDEBAR
+        ================================================================== -->
         <aside class="w-64 flex-shrink-0 bg-[#0F172A] text-gray-300 flex flex-col p-4">
             <div class="flex items-center space-x-2 mb-10 px-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
@@ -123,8 +131,12 @@
             </div>
         </aside>
 
+        <!-- =================================================================
+            MAIN CONTENT AREA
+        ================================================================== -->
         <main class="flex-1 p-8 overflow-y-auto">
             
+            <!-- OVERVIEW PAGE -->
             <div id="overview-page" class="page-content">
                 <header class="mb-8">
                     <h1 id="welcome-message" class="text-3xl font-bold">Welcome back, Saranya</h1>
@@ -132,6 +144,7 @@
                 </header>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2">
+                        <!-- Account Balance Card -->
                         <div class="bg-white p-6 rounded-xl shadow-sm">
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="font-semibold text-lg">Account Balance</h2>
@@ -147,13 +160,15 @@
                             </div>
                         </div>
                         
+                        <!-- Recent Transactions Card -->
                         <div class="bg-white p-6 rounded-xl shadow-sm mt-8">
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="font-semibold text-lg">Recent Transactions</h2>
                                 <a href="#" id="see-all-transactions" class="text-teal-500 font-semibold text-sm hover:text-teal-600">See all</a>
                             </div>
                             <div id="transactions-list" class="space-y-4">
-                                </div>
+                                <!-- Transactions will be dynamically inserted here -->
+                            </div>
                         </div>
                     </div>
                     <div class="lg:col-span-1">
@@ -161,7 +176,8 @@
                             <img src="https://placehold.co/40x40/E2E8F0/4A5568?text=S" alt="Saranya's Profile" class="w-10 h-10 rounded-full">
                         </div>
                         <div class="space-y-6">
-                           <div class="bg-white p-5 rounded-xl shadow-sm relative">
+                           <!-- Total Balance Card -->
+                            <div class="bg-white p-5 rounded-xl shadow-sm relative">
                                <div class="flex justify-between items-center">
                                     <div class="flex items-center space-x-3">
                                         <div class="p-2 bg-teal-100 rounded-full">
@@ -184,6 +200,7 @@
                                <p id="total-balance-amount" class="text-3xl font-bold mt-4"></p>
                             </div>
                             
+                            <!-- Main Account Card -->
                             <div class="bg-white p-5 rounded-xl shadow-sm relative">
                                <div class="flex justify-between items-center">
                                     <div class="flex items-center space-x-3">
@@ -207,6 +224,7 @@
                                <p id="main-account-balance" class="text-2xl font-bold mt-4"></p>
                             </div>
                             
+                            <!-- Savings Card -->
                             <div class="bg-white p-5 rounded-xl shadow-sm relative">
                                <div class="flex justify-between items-center">
                                     <div class="flex items-center space-x-3">
@@ -229,7 +247,8 @@
                                </div>
                                <p id="savings-balance" class="text-2xl font-bold mt-4"></p>
                             </div>
-                             <div class="bg-white p-5 rounded-xl shadow-sm">
+                             <!-- Income Card -->
+                            <div class="bg-white p-5 rounded-xl shadow-sm">
                                <div class="flex justify-between items-center">
                                     <div class="flex items-center space-x-3">
                                         <div class="p-2 bg-green-100 rounded-full">
@@ -247,6 +266,7 @@
                 </div>
             </div>
 
+            <!-- BUDGETS PAGE -->
             <div id="budgets-page" class="page-content hidden">
                  <header class="mb-8">
                     <h1 class="text-3xl font-bold">Budgets</h1>
@@ -254,6 +274,7 @@
                 </header>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Column: Budget Categories -->
                     <div class="lg:col-span-2 space-y-8">
                         <div class="bg-white p-6 rounded-xl shadow-sm">
                             <div class="flex justify-between items-center mb-4">
@@ -264,7 +285,8 @@
                                 </button>
                             </div>
                             <div id="budget-categories-list" class="space-y-5">
-                                </div>
+                                <!-- Budget categories will be dynamically inserted here -->
+                            </div>
                         </div>
                         
                         <div class="bg-white p-6 rounded-xl shadow-sm">
@@ -276,10 +298,12 @@
                                 </button>
                             </div>
                             <div id="recurring-bills-list" class="space-y-3">
-                                </div>
+                                <!-- Recurring bills will be dynamically inserted here -->
+                            </div>
                         </div>
                     </div>
                     
+                    <!-- Right Column: Savings Goals -->
                     <div class="lg:col-span-1">
                          <div class="bg-white p-6 rounded-xl shadow-sm">
                             <div class="flex justify-between items-center mb-4">
@@ -289,12 +313,14 @@
                                 </button>
                             </div>
                             <div id="savings-goals-list" class="space-y-6">
-                               </div>
+                               <!-- Savings goals will be dynamically inserted here -->
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             
+            <!-- EXPENSES PAGE -->
             <div id="expenses-page" class="page-content hidden">
                 <header class="mb-8">
                     <h1 class="text-3xl font-bold">Expenses</h1>
@@ -302,6 +328,7 @@
                 </header>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Column: Expense History & Filters -->
                     <div class="lg:col-span-2">
                         <div class="bg-white p-6 rounded-xl shadow-sm">
                             <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
@@ -315,9 +342,11 @@
                                 </div>
                             </div>
                             <div id="expense-history-list" class="space-y-2">
-                                </div>
+                                <!-- Expense items will be dynamically inserted here -->
+                            </div>
                         </div>
                     </div>
+                    <!-- Right Column: Add Expense & Summary -->
                     <div class="lg:col-span-1 space-y-8">
                          <div class="bg-white p-6 rounded-xl shadow-sm">
                             <h2 class="font-semibold text-lg mb-4">Add New Expense</h2>
@@ -333,7 +362,8 @@
                                 <div>
                                     <label for="expense-category" class="block text-sm font-medium text-gray-700">Category</label>
                                     <select id="expense-category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
-                                        </select>
+                                        <!-- Populated from budgets -->
+                                    </select>
                                 </div>
                                 <div>
                                     <label for="expense-source" class="block text-sm font-medium text-gray-700">Payment From</label>
@@ -367,6 +397,7 @@
                 </div>
             </div>
 
+            <!-- INCOME PAGE -->
             <div id="income-page" class="page-content hidden">
                 <header class="mb-8 flex justify-between items-center">
                     <div>
@@ -380,14 +411,17 @@
                 </header>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                      <div class="lg:col-span-2">
+                      <!-- Left Column: Income History -->
+                    <div class="lg:col-span-2">
                         <div class="bg-white p-6 rounded-xl shadow-sm">
                             <h2 class="font-semibold text-lg mb-4">Income History</h2>
                             <div id="income-history-list" class="space-y-2">
-                                </div>
+                                <!-- Income items will be dynamically inserted here -->
+                            </div>
                         </div>
                     </div>
-                      <div class="lg:col-span-1 space-y-8">
+                      <!-- Right Column: Add Income & Summary -->
+                    <div class="lg:col-span-1 space-y-8">
                          <div class="bg-white p-6 rounded-xl shadow-sm">
                             <h2 class="font-semibold text-lg mb-4">Add New Income</h2>
                             <form id="add-income-form" class="space-y-4">
@@ -402,7 +436,8 @@
                                 <div>
                                     <label for="income-source" class="block text-sm font-medium text-gray-700">Source</label>
                                     <select id="income-source" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                                       </select>
+                                       <!-- Populated from sources -->
+                                    </select>
                                 </div>
                                 <div>
                                     <label for="income-account" class="block text-sm font-medium text-gray-700">Deposit To</label>
@@ -440,6 +475,8 @@
         </main>
     </div>
     
+    <!-- MODALS -->
+    <!-- Add Category Modal -->
     <div id="add-category-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
         <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
             <h2 class="text-2xl font-bold mb-6">Add New Budget Category</h2>
@@ -461,7 +498,32 @@
             </form>
         </div>
     </div>
+
+    <!-- Edit Category Modal -->
+    <div id="edit-category-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
+            <h2 class="text-2xl font-bold mb-6">Edit Budget Category</h2>
+            <form id="edit-category-form">
+                <input type="hidden" id="edit-category-id">
+                <div class="space-y-4">
+                    <div>
+                        <label for="edit-category-name" class="block text-sm font-medium text-gray-700">Category Name</label>
+                        <input type="text" id="edit-category-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label for="edit-category-limit" class="block text-sm font-medium text-gray-700">Monthly Spending Limit (₹)</label>
+                        <input type="number" id="edit-category-limit" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
     
+    <!-- Add Bill Modal -->
     <div id="add-bill-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
             <h2 class="text-2xl font-bold mb-6">Add Recurring Bill</h2>
@@ -478,7 +540,8 @@
                     <div>
                         <label for="bill-category" class="block text-sm font-medium text-gray-700">Budget Category</label>
                         <select id="bill-category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
-                            </select>
+                            <!-- Options will be populated dynamically -->
+                        </select>
                     </div>
                 </div>
                 <div class="mt-8 flex justify-end space-x-3">
@@ -489,7 +552,8 @@
         </div>
     </div>
 
-    <div id="add-goal-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <!-- Add Goal Modal -->
+     <div id="add-goal-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
             <h2 class="text-2xl font-bold mb-6">Add New Savings Goal</h2>
             <form id="add-goal-form">
@@ -511,6 +575,7 @@
         </div>
     </div>
     
+    <!-- Update Account Balance Modal -->
     <div id="update-account-balance-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
             <h2 id="update-account-modal-title" class="text-2xl font-bold mb-6">Update Balance</h2>
@@ -529,6 +594,7 @@
         </div>
     </div>
     
+    <!-- Edit Expense Modal -->
     <div id="edit-expense-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
             <h2 class="text-2xl font-bold mb-6">Edit Expense</h2>
@@ -546,7 +612,8 @@
                     <div>
                         <label for="edit-expense-category" class="block text-sm font-medium text-gray-700">Category</label>
                         <select id="edit-expense-category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
-                            </select>
+                            <!-- Populated from budgets -->
+                        </select>
                     </div>
                     <div>
                         <label for="edit-expense-source" class="block text-sm font-medium text-gray-700">Payment From</label>
@@ -568,6 +635,7 @@
         </div>
     </div>
     
+    <!-- Manage Income Sources Modal -->
     <div id="manage-sources-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
         <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
             <h2 class="text-2xl font-bold mb-6">Manage Income Sources</h2>
@@ -581,7 +649,8 @@
             <div>
                  <h3 class="text-lg font-semibold mb-2">Existing Sources</h3>
                  <div id="income-sources-list" class="space-y-2 max-h-60 overflow-y-auto">
-                     </div>
+                     <!-- Source items will be dynamically inserted here -->
+                 </div>
             </div>
              <div class="mt-8 flex justify-end">
                 <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Close</button>
@@ -831,6 +900,7 @@
             // --- BUDGETS PAGE LOGIC ---
             const budgetList = document.getElementById('budget-categories-list');
             const addCategoryForm = document.getElementById('add-category-form');
+            const editCategoryForm = document.getElementById('edit-category-form');
             const billsList = document.getElementById('recurring-bills-list');
             const addBillForm = document.getElementById('add-bill-form');
             const goalsList = document.getElementById('savings-goals-list');
@@ -869,9 +939,14 @@
                                         <div class="${progressBarColor} h-2.5 rounded-full" style="width: ${percentage}%"></div>
                                     </div>
                                 </div>
-                                <button data-id="${cat.id}" class="delete-category-btn text-gray-400 hover:text-red-500 transition-colors">
-                                    <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
-                                </button>
+                                <div class="flex items-center space-x-2">
+                                    <button data-id="${cat.id}" class="edit-category-btn text-gray-400 hover:text-blue-500 transition-colors">
+                                        <i data-lucide="edit" class="w-4 h-4 pointer-events-none"></i>
+                                    </button>
+                                    <button data-id="${cat.id}" class="delete-category-btn text-gray-400 hover:text-red-500 transition-colors">
+                                        <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                    </button>
+                                </div>
                             </div>
                         `;
                     });
@@ -901,8 +976,11 @@
                     hideModal(document.getElementById('add-category-modal'));
                 }
             });
+
             budgetList.addEventListener('click', async (e) => {
                 const deleteBtn = e.target.closest('.delete-category-btn');
+                const editBtn = e.target.closest('.edit-category-btn');
+
                 if (deleteBtn) {
                     const categoryId = parseInt(deleteBtn.dataset.id);
                     const { error } = await db.from('budget_categories').delete().eq('id', categoryId);
@@ -919,7 +997,43 @@
                     state.budgetCategories = state.budgetCategories.filter(cat => cat.id !== categoryId);
                     renderBudgetsPage();
                 }
+
+                if (editBtn) {
+                    const categoryId = parseInt(editBtn.dataset.id);
+                    const category = state.budgetCategories.find(cat => cat.id === categoryId);
+                    if (category) {
+                        document.getElementById('edit-category-id').value = category.id;
+                        document.getElementById('edit-category-name').value = category.name;
+                        document.getElementById('edit-category-limit').value = category.limit;
+                        showModal('edit-category-modal');
+                    }
+                }
             });
+
+            editCategoryForm.addEventListener('submit', async(e) => {
+                e.preventDefault();
+                const id = parseInt(document.getElementById('edit-category-id').value);
+                const name = document.getElementById('edit-category-name').value;
+                const limit = parseFloat(document.getElementById('edit-category-limit').value);
+
+                if (id && name && limit) {
+                    const { error } = await db.from('budget_categories').update({ name, limit }).eq('id', id);
+                    if (error) {
+                        console.error('Error updating category:', error);
+                        return;
+                    }
+
+                    const categoryInState = state.budgetCategories.find(c => c.id === id);
+                    categoryInState.name = name;
+                    categoryInState.limit = limit;
+
+                    renderBudgetsPage();
+                    populateExpenseCategoryDropdowns();
+                    editCategoryForm.reset();
+                    hideModal(document.getElementById('edit-category-modal'));
+                }
+            });
+
             const renderRecurringBills = () => {
                  let content = '';
                 if (state.recurringBills.length === 0) {
@@ -1466,6 +1580,9 @@
 
             // --- OVERVIEW PAGE LOGIC ---
             let accountBalanceChart;
+            const transactionsList = document.getElementById('transactions-list');
+            const seeAllBtn = document.getElementById('see-all-transactions');
+            let transactionsVisible = 3;
 
             const updateBalanceChart = (newTotal) => {
                 if (accountBalanceChart) {
@@ -1474,6 +1591,7 @@
                     accountBalanceChart.update();
                 }
             };
+
             const initializeOverviewCharts = () => {
                 if (accountBalanceChart) {
                     accountBalanceChart.destroy();
@@ -1540,12 +1658,25 @@
                     });
                 });
             }
-            const transactionsList = document.getElementById('transactions-list');
-            const seeAllBtn = document.getElementById('see-all-transactions');
-            let transactionsVisible = 3;
-
+            
             const renderTransactions = () => { 
-                const sortedExpenses = [...state.expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+                const formattedExpenses = state.expenses.map(exp => ({
+                    type: 'expense',
+                    date: exp.date,
+                    description: exp.notes || exp.category || "Expense",
+                    amount: -exp.amount
+                }));
+
+                const formattedIncome = state.income.map(inc => ({
+                    type: 'income',
+                    date: inc.date,
+                    description: inc.notes || inc.source || "Income",
+                    amount: inc.amount
+                }));
+
+                const allTransactions = [...formattedExpenses, ...formattedIncome]
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
                 transactionsList.innerHTML = '';
                 
                 const formatDateForOverview = (dateString) => {
@@ -1559,25 +1690,32 @@
                     return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
                 };
 
-                if(sortedExpenses.length === 0) {
+                if(allTransactions.length === 0) {
                     transactionsList.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">No recent transactions.</p>';
+                    seeAllBtn.classList.add('hidden');
                     return;
                 }
+                
+                seeAllBtn.classList.remove('hidden');
 
-                sortedExpenses.slice(0, transactionsVisible).forEach(exp => {
-                    const name = exp.notes || exp.category;
+                allTransactions.slice(0, transactionsVisible).forEach(tx => {
+                    const name = String(tx.description);
                     const avatar = name.charAt(0).toUpperCase();
+                    const amountColor = tx.type === 'income' ? 'text-green-600' : 'text-gray-800';
                     
+                    const badgeText = tx.type === 'income' ? 'Income' : 'Expense';
+                    const badgeClasses = tx.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+
                     transactionsList.innerHTML += `
                         <div class="grid grid-cols-6 items-center">
                             <div class="col-span-3 flex items-center space-x-4">
                                 <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-600">${avatar}</div>
                                 <span class="font-medium truncate" title="${name}">${name}</span>
                             </div>
-                            <span class="col-span-1 text-gray-500 text-sm">${formatDateForOverview(exp.date)}</span>
+                            <span class="col-span-1 text-gray-500 text-sm">${formatDateForOverview(tx.date)}</span>
                             <div class="col-span-2 flex justify-end items-center space-x-4">
-                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
-                                <span class="font-semibold text-right">${formatCurrency(-exp.amount)}</span>
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full ${badgeClasses}">${badgeText}</span>
+                                <span class="font-semibold text-right ${amountColor}">${formatCurrency(tx.amount)}</span>
                             </div>
                         </div>
                     `;
@@ -1586,7 +1724,8 @@
              };
             seeAllBtn.addEventListener('click', (e) => { 
                 e.preventDefault();
-                transactionsVisible = (transactionsVisible === 3) ? state.expenses.length : 3;
+                const totalTransactions = state.expenses.length + state.income.length;
+                transactionsVisible = (transactionsVisible === 3) ? totalTransactions : 3;
                 seeAllBtn.textContent = (transactionsVisible === 3) ? 'See all' : 'Show less';
                 renderTransactions();
              });
@@ -1614,7 +1753,7 @@
                 for (let i = currentMonth; i >= 0; i--) {
                     yearDataPoints[i] = runningBalance;
                     
-                    const monthTransactions = state.expenses
+                    const monthExpenses = state.expenses
                         .filter(exp => {
                             const d = new Date(exp.date);
                             return d.getFullYear() === currentYear && d.getMonth() === i;
@@ -1628,7 +1767,7 @@
                         })
                         .reduce((sum, inc) => sum + inc.amount, 0);
 
-                    runningBalance = runningBalance + monthTransactions - monthIncome;
+                    runningBalance = runningBalance + monthExpenses - monthIncome;
                 }
 
                 // --- Month Data (Last 4 weeks) ---
@@ -1689,3 +1828,4 @@
     </script>
 </body>
 </html>
+
