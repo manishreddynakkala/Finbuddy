@@ -1,0 +1,2 @@
+# Finbuddy
+Personal expense tracker
