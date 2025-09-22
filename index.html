@@ -258,17 +258,6 @@
                                         </div>
                                         <span class="font-semibold text-gray-900 dark:text-white">Savings</span>
                                     </div>
-                                   <button data-account="savings" class="account-menu-btn text-gray-400 hover:text-gray-600"><i data-lucide="more-horizontal" class="w-5 h-5 pointer-events-none"></i></button>
-                                   <div data-dropdown="savings" class="account-dropdown absolute top-10 right-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-xl w-40 hidden z-10">
-                                        <ul>
-                                            <li>
-                                                <button data-account="savings" class="update-account-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center space-x-2">
-                                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
-                                                    <span>Update Balance</span>
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
                                </div>
                                <p id="savings-balance" class="text-2xl font-bold mt-4 text-gray-900 dark:text-white"></p>
                             </div>
@@ -341,6 +330,25 @@
                                <!-- Savings goals will be dynamically inserted here -->
                             </div>
                         </div>
+                        <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm mt-8">
+                            <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Transfer to Savings</h2>
+                            <form id="transfer-savings-form" class="space-y-4">
+                                <div>
+                                    <label for="transfer-amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (₹)</label>
+                                    <input type="number" id="transfer-amount" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
+                                <div>
+                                    <label for="transfer-goal" class="block text-sm font-medium text-gray-700 dark:text-gray-300">For Savings Goal</label>
+                                    <select id="transfer-goal" required class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        <!-- Populated dynamically -->
+                                    </select>
+                                </div>
+                                <button type="submit" class="w-full bg-indigo-500 text-white px-4 py-2.5 text-sm font-semibold rounded-lg hover:bg-indigo-600 transition-colors flex items-center justify-center space-x-2">
+                                    <i data-lucide="arrow-right-left" class="w-4 h-4"></i>
+                                    <span>Transfer Funds</span>
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -358,7 +366,7 @@
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
                             <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
                                 <h2 class="font-semibold text-lg text-gray-900 dark:text-white">Expense History</h2>
-                                <div class="flex items-center gap-2 w-full md:w-auto">
+                                <div class="flex flex-wrap items-center justify-end gap-2 w-full md:w-auto">
                                     <input type="text" id="expense-search-input" placeholder="Search by keyword..." class="w-full md:w-40 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-sm">
                                     <select id="expense-category-filter" class="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-sm">
                                         <option value="all">All Categories</option>
@@ -439,7 +447,16 @@
                       <!-- Left Column: Income History -->
                     <div class="lg:col-span-2">
                         <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm">
-                            <h2 class="font-semibold text-lg mb-4 text-gray-900 dark:text-white">Income History</h2>
+                            <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                                <h2 class="font-semibold text-lg text-gray-900 dark:text-white">Income History</h2>
+                                <div class="flex flex-wrap items-center justify-end gap-2 w-full md:w-auto">
+                                    <input type="text" id="income-search-input" placeholder="Search by keyword..." class="w-full md:w-40 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-sm">
+                                    <select id="income-source-filter" class="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-sm">
+                                        <option value="all">All Sources</option>
+                                    </select>
+                                    <input type="date" id="income-date-filter" class="px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-sm">
+                                </div>
+                            </div>
                             <div id="income-history-list" class="space-y-2">
                                 <!-- Income items will be dynamically inserted here -->
                             </div>
@@ -808,6 +825,9 @@
         </div>
     </div>
 
+    <!-- Notification -->
+    <div id="notification" class="fixed top-5 right-5 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 transition-opacity duration-300 z-50"></div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
@@ -843,8 +863,7 @@
                     return main ? parseFloat(main.balance) : 0;
                 },
                 get savingsBalance() {
-                    const savings = this.accounts.find(a => a.account_name === 'Savings');
-                    return savings ? parseFloat(savings.balance) : 0;
+                    return this.savingsGoals.reduce((sum, goal) => sum + parseFloat(goal.saved_amount), 0);
                 },
                 get totalIncomeThisMonth() {
                     const currentMonth = new Date().getMonth();
@@ -860,6 +879,18 @@
             
             const formatCurrency = (amount) => {
                 return amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+            
+            const showNotification = (message, isError = false) => {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.classList.remove('bg-green-500', 'bg-red-500');
+                notification.classList.add(isError ? 'bg-red-500' : 'bg-green-500');
+                notification.classList.remove('opacity-0');
+
+                setTimeout(() => {
+                    notification.classList.add('opacity-0');
+                }, 3000);
             }
 
               // --- DATA LOADING ---
@@ -1065,11 +1096,14 @@
             const addBillForm = document.getElementById('add-bill-form');
             const goalsList = document.getElementById('savings-goals-list');
             const addGoalForm = document.getElementById('add-goal-form');
+            const transferSavingsForm = document.getElementById('transfer-savings-form');
+
 
             const renderBudgetsPage = () => {
                 renderBudgetCategories();
                 renderRecurringBills();
                 renderSavingsGoals();
+                populateTransferGoalDropdown();
             };
             const renderBudgetCategories = () => {
                  let content = '';
@@ -1147,7 +1181,7 @@
 
                     if (error) {
                         if (error.code === '23503') { 
-                            alert('Cannot delete this category because it has associated expenses or bills. Please reassign or delete them first.');
+                            showNotification('Cannot delete this category because it has associated expenses or bills. Please reassign or delete them first.', true);
                         } else {
                            console.error('Error deleting category:', error);
                         }
@@ -1335,6 +1369,70 @@
                     state.savingsGoals = state.savingsGoals.filter(goal => goal.id !== goalId);
                     renderSavingsGoals();
                 }
+            });
+
+             const populateTransferGoalDropdown = () => {
+                const select = document.getElementById('transfer-goal');
+                if (!select) return;
+                let options = '<option value="">Select a goal</option>';
+                state.savingsGoals.forEach(goal => {
+                    options += `<option value="${goal.id}">${goal.name}</option>`;
+                });
+                select.innerHTML = options;
+            };
+
+            transferSavingsForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const amount = parseFloat(document.getElementById('transfer-amount').value);
+                const goalId = parseInt(document.getElementById('transfer-goal').value);
+
+                if (isNaN(amount) || amount <= 0 || isNaN(goalId)) {
+                    showNotification('Please enter a valid amount and select a savings goal.', true);
+                    return;
+                }
+
+                const mainAccount = state.accounts.find(a => a.account_name === 'Main Account');
+                const savingsAccount = state.accounts.find(a => a.account_name === 'Savings');
+                const savingsGoal = state.savingsGoals.find(g => g.id === goalId);
+
+                if (!mainAccount || !savingsAccount || !savingsGoal) {
+                    showNotification('Required accounts or savings goal not found.', true);
+                    return;
+                }
+                
+                if (amount > mainAccount.balance) {
+                    showNotification('Insufficient funds in Main Account for this transfer.', true);
+                    return;
+                }
+
+                // --- Start Transaction ---
+                const newMainBalance = mainAccount.balance - amount;
+                const newSavingsBalance = savingsAccount.balance + amount;
+                const newSavedAmount = savingsGoal.saved_amount + amount;
+
+                // --- Database Updates ---
+                const { error: mainUpdateError } = await db.from('accounts').update({ balance: newMainBalance }).eq('id', mainAccount.id);
+                const { error: savingsUpdateError } = await db.from('accounts').update({ balance: newSavingsBalance }).eq('id', savingsAccount.id);
+                const { error: goalUpdateError } = await db.from('savings_goals').update({ saved_amount: newSavedAmount }).eq('id', savingsGoal.id);
+                
+                if(mainUpdateError || savingsUpdateError || goalUpdateError) {
+                    console.error("Error during transfer:", mainUpdateError, savingsUpdateError, goalUpdateError);
+                    showNotification('An error occurred during the transfer. Please try again.', true);
+                    return;
+                }
+
+                // --- Update State & Re-render ---
+                mainAccount.balance = newMainBalance;
+                savingsAccount.balance = newSavingsBalance;
+                savingsGoal.saved_amount = newSavedAmount;
+                
+                renderAllBalances();
+                renderBudgetsPage(); 
+                updateBalanceChart(state.totalBalance);
+                
+                transferSavingsForm.reset();
+                showNotification('Transfer successful!');
             });
             
             // --- EXPENSES PAGE LOGIC ---
@@ -1579,28 +1677,48 @@
                 renderIncomeHistory();
                 renderIncomeSummary();
                 document.getElementById('income-date').valueAsDate = new Date();
+                 // Add listeners for filters
+                document.getElementById('income-search-input').addEventListener('input', renderIncomeHistory);
+                document.getElementById('income-source-filter').addEventListener('change', renderIncomeHistory);
+                document.getElementById('income-date-filter').addEventListener('change', renderIncomeHistory);
             };
 
             const populateIncomeSourceDropdowns = () => {
                 const selects = [
                     document.getElementById('income-source'),
-                    document.getElementById('edit-income-source')
+                    document.getElementById('edit-income-source'),
+                    document.getElementById('income-source-filter')
                 ];
                 selects.forEach(select => {
-                    let options = '<option value="">Select a Source</option>';
+                    const currentValue = select.value;
+                    let options = (select.id === 'income-source-filter') ? '<option value="all">All Sources</option>' :'<option value="">Select a Source</option>';
                     state.incomeSources.forEach(source => {
                         options += `<option value="${source.name}">${source.name}</option>`;
                     });
                     select.innerHTML = options;
+                    select.value = currentValue;
                 });
             };
 
             const renderIncomeHistory = () => {
                 let content = '';
-                const sortedIncome = [...state.income].sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                const searchTerm = document.getElementById('income-search-input').value.toLowerCase();
+                const sourceFilter = document.getElementById('income-source-filter').value;
+                const dateFilter = document.getElementById('income-date-filter').value;
+
+                let filteredIncome = state.income.filter(inc => {
+                    const noteMatch = inc.notes ? inc.notes.toLowerCase().includes(searchTerm) : false;
+                    const matchesSearch = searchTerm === '' || noteMatch;
+                    const matchesSource = sourceFilter === 'all' || inc.source === sourceFilter;
+                    const matchesDate = dateFilter === '' || inc.date === dateFilter;
+                    return matchesSearch && matchesSource && matchesDate;
+                });
+
+                const sortedIncome = filteredIncome.sort((a, b) => new Date(b.date) - new Date(a.date));
 
                 if (sortedIncome.length === 0) {
-                    incomeHistoryList.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No income recorded yet.</p>';
+                    incomeHistoryList.innerHTML = '<p class="text-sm text-gray-500 dark:text-gray-400 text-center py-4">No income recorded for the selected criteria.</p>';
                     return;
                 }
                 
