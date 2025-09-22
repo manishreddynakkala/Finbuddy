@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinBuddy - Financial Dashboard</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom styles to apply the Inter font family */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f8fa;
+        }
+        /* Custom styles for Chart.js tooltips */
+        .chartjs-tooltip {
+            background-color: #0F172A;
+            color: white;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+        /* Animation for modals */
+        .modal-enter {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .modal-leave {
+            animation: fadeOut 0.3s ease-in forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="flex h-screen">
+        <aside class="w-64 flex-shrink-0 bg-[#0F172A] text-gray-300 flex flex-col p-4">
+            <div class="flex items-center space-x-2 mb-10 px-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+                <h1 class="text-2xl font-bold text-white">FinBuddy</h1>
+            </div>
+            
+            <nav class="flex-1" id="main-nav">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#" data-page="overview" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gray-700 text-white">
+                            <i data-lucide="layout-dashboard"></i>
+                            <span>Overview</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="budgets" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                            <i data-lucide="piggy-bank"></i>
+                            <span>Budgets</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="expenses" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                            <i data-lucide="receipt"></i>
+                            <span>Expenses</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="income" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                             <i data-lucide="dollar-sign"></i>
+                            <span>Income</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="reports" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                            <i data-lucide="bar-chart-3"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-page="settings" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
+                            <i data-lucide="settings"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="mt-auto">
+                <div class="bg-gray-700 rounded-lg p-4 text-center">
+                    <p class="text-sm">Have a question?</p>
+                    <p class="text-xs text-gray-400 mt-1">Reach out to us via phone or email.</p>
+                    <div class="mt-4 flex space-x-2">
+                         <a href="tel:+918123084877" class="flex-1 flex items-center justify-center space-x-2 bg-gray-800 hover:bg-gray-900 text-white text-sm py-2 rounded-lg transition-colors duration-200">
+                             <i data-lucide="phone" class="w-4 h-4"></i>
+                             <span>Call Us</span>
+                         </a>
+                         <a href="mailto:manishreddynakkala@gmail.com" class="flex-1 flex items-center justify-center space-x-2 bg-teal-500 hover:bg-teal-600 text-white text-sm py-2 rounded-lg transition-colors duration-200">
+                             <i data-lucide="mail" class="w-4 h-4"></i>
+                             <span>Email Us</span>
+                         </a>
+                    </div>
+                </div>
+
+                <a href="#" class="flex items-center space-x-3 px-3 py-4 mt-2 rounded-lg text-pink-400 hover:bg-gray-700 transition-colors duration-200">
+                    <i data-lucide="heart"></i>
+                    <span>With love</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="flex-1 p-8 overflow-y-auto">
+            
+            <div id="overview-page" class="page-content">
+                <header class="mb-8">
+                    <h1 id="welcome-message" class="text-3xl font-bold">Welcome back, Saranya</h1>
+                    <p class="text-gray-500 mt-1">Here's an overview of all of your balances.</p>
+                </header>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="font-semibold text-lg">Account Balance</h2>
+                                <div id="chart-filters" class="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+                                    <button data-period="day" class="chart-filter-btn px-3 py-1 text-sm rounded-md hover:bg-white transition-colors">Day</button>
+                                    <button data-period="week" class="chart-filter-btn px-3 py-1 text-sm rounded-md hover:bg-white transition-colors">Week</button>
+                                    <button data-period="month" class="chart-filter-btn px-3 py-1 text-sm rounded-md hover:bg-white transition-colors">Month</button>
+                                    <button data-period="year" class="chart-filter-btn px-3 py-1 text-sm rounded-md bg-white text-gray-800 font-medium shadow-sm transition-colors active">Year</button>
+                                </div>
+                            </div>
+                            <div class="h-72">
+                                <canvas id="accountBalanceChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm mt-8">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="font-semibold text-lg">Recent Transactions</h2>
+                                <a href="#" id="see-all-transactions" class="text-teal-500 font-semibold text-sm hover:text-teal-600">See all</a>
+                            </div>
+                            <div id="transactions-list" class="space-y-4">
+                                </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-1">
+                        <div class="flex justify-end items-center space-x-6 mb-8">
+                            <img src="https://placehold.co/40x40/E2E8F0/4A5568?text=S" alt="Saranya's Profile" class="w-10 h-10 rounded-full">
+                        </div>
+                        <div class="space-y-6">
+                           <div class="bg-white p-5 rounded-xl shadow-sm relative">
+                               <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-2 bg-teal-100 rounded-full">
+                                            <i data-lucide="wallet" class="text-teal-500"></i>
+                                        </div>
+                                        <span class="font-semibold">Total Balance</span>
+                                    </div>
+                                    <button data-account="total" class="account-menu-btn text-gray-400 hover:text-gray-600"><i data-lucide="more-horizontal" class="w-5 h-5 pointer-events-none"></i></button>
+                                    <div data-dropdown="total" class="account-dropdown absolute top-10 right-4 bg-white border rounded-lg shadow-xl w-40 hidden z-10">
+                                        <ul>
+                                            <li>
+                                                <button data-account="total" class="update-account-btn w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                                    <span>Update Balance</span>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                               </div>
+                               <p id="total-balance-amount" class="text-3xl font-bold mt-4"></p>
+                            </div>
+                            
+                            <div class="bg-white p-5 rounded-xl shadow-sm relative">
+                               <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-2 bg-blue-100 rounded-full">
+                                            <i data-lucide="landmark" class="text-blue-500"></i>
+                                        </div>
+                                        <span class="font-semibold">Main Account</span>
+                                    </div>
+                                    <button data-account="main" class="account-menu-btn text-gray-400 hover:text-gray-600"><i data-lucide="more-horizontal" class="w-5 h-5 pointer-events-none"></i></button>
+                                    <div data-dropdown="main" class="account-dropdown absolute top-10 right-4 bg-white border rounded-lg shadow-xl w-40 hidden z-10">
+                                        <ul>
+                                            <li>
+                                                <button data-account="main" class="update-account-btn w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                                    <span>Update Balance</span>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                               </div>
+                               <p id="main-account-balance" class="text-2xl font-bold mt-4"></p>
+                            </div>
+                            
+                            <div class="bg-white p-5 rounded-xl shadow-sm relative">
+                               <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-2 bg-indigo-100 rounded-full">
+                                            <i data-lucide="circle-dollar-sign" class="text-indigo-500"></i>
+                                        </div>
+                                        <span class="font-semibold">Savings</span>
+                                    </div>
+                                   <button data-account="savings" class="account-menu-btn text-gray-400 hover:text-gray-600"><i data-lucide="more-horizontal" class="w-5 h-5 pointer-events-none"></i></button>
+                                   <div data-dropdown="savings" class="account-dropdown absolute top-10 right-4 bg-white border rounded-lg shadow-xl w-40 hidden z-10">
+                                        <ul>
+                                            <li>
+                                                <button data-account="savings" class="update-account-btn w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                                    <span>Update Balance</span>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                               </div>
+                               <p id="savings-balance" class="text-2xl font-bold mt-4"></p>
+                            </div>
+                             <div class="bg-white p-5 rounded-xl shadow-sm">
+                               <div class="flex justify-between items-center">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="p-2 bg-green-100 rounded-full">
+                                            <i data-lucide="dollar-sign" class="text-green-500"></i>
+                                        </div>
+                                        <span class="font-semibold">Income</span>
+                                    </div>
+                                   <button class="text-gray-400 hover:text-gray-600"><i data-lucide="more-horizontal" class="w-5 h-5"></i></button>
+                               </div>
+                               <p id="income-balance" class="text-2xl font-bold mt-4"></p>
+                               <p class="text-sm text-gray-500 mt-1">This Month</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="budgets-page" class="page-content hidden">
+                 <header class="mb-8">
+                    <h1 class="text-3xl font-bold">Budgets</h1>
+                    <p class="text-gray-500 mt-1">Manage your monthly spending and savings goals.</p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 space-y-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="font-semibold text-lg">Budget Categories</h2>
+                                <button id="add-category-btn" class="bg-teal-500 text-white px-4 py-2 text-sm font-semibold rounded-lg hover:bg-teal-600 transition-colors flex items-center space-x-2">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                    <span>Add New Category</span>
+                                </button>
+                            </div>
+                            <div id="budget-categories-list" class="space-y-5">
+                                </div>
+                        </div>
+                        
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                             <div class="flex justify-between items-center mb-4">
+                                <h2 class="font-semibold text-lg">Recurring Bills & Subscriptions</h2>
+                                <button id="add-bill-btn" class="bg-gray-200 text-gray-800 px-4 py-2 text-sm font-semibold rounded-lg hover:bg-gray-300 transition-colors flex items-center space-x-2">
+                                    <i data-lucide="plus" class="w-4 h-4"></i>
+                                    <span>Add Recurring Bill</span>
+                                </button>
+                            </div>
+                            <div id="recurring-bills-list" class="space-y-3">
+                                </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-1">
+                         <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="font-semibold text-lg">Savings Goals</h2>
+                                <button id="add-goal-btn" class="text-teal-500 font-semibold text-sm hover:text-teal-600">
+                                    Add New Goal
+                                </button>
+                            </div>
+                            <div id="savings-goals-list" class="space-y-6">
+                               </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="expenses-page" class="page-content hidden">
+                <header class="mb-8">
+                    <h1 class="text-3xl font-bold">Expenses</h1>
+                    <p class="text-gray-500 mt-1">Track, filter, and manage all your spending.</p>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <div class="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                                <h2 class="font-semibold text-lg">Expense History</h2>
+                                <div class="flex items-center gap-2 w-full md:w-auto">
+                                    <input type="text" id="expense-search-input" placeholder="Search by keyword..." class="w-full md:w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-sm">
+                                    <select id="expense-category-filter" class="px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-sm">
+                                        <option value="all">All Categories</option>
+                                    </select>
+                                    <input type="date" id="expense-date-filter" class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 text-sm">
+                                </div>
+                            </div>
+                            <div id="expense-history-list" class="space-y-2">
+                                </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-1 space-y-8">
+                         <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <h2 class="font-semibold text-lg mb-4">Add New Expense</h2>
+                            <form id="add-expense-form" class="space-y-4">
+                                <div>
+                                    <label for="expense-amount" class="block text-sm font-medium text-gray-700">Amount (₹)</label>
+                                    <input type="number" id="expense-amount" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                                </div>
+                                <div>
+                                    <label for="expense-date" class="block text-sm font-medium text-gray-700">Date</label>
+                                    <input type="date" id="expense-date" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                                </div>
+                                <div>
+                                    <label for="expense-category" class="block text-sm font-medium text-gray-700">Category</label>
+                                    <select id="expense-category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                                        </select>
+                                </div>
+                                <div>
+                                    <label for="expense-source" class="block text-sm font-medium text-gray-700">Payment From</label>
+                                    <select id="expense-source" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                                        <option value="">Select Account</option>
+                                        <option value="main">Main Account</option>
+                                        <option value="savings">Savings</option>
+                                    </select>
+                                </div>
+                                 <div>
+                                    <label for="expense-notes" class="block text-sm font-medium text-gray-700">Notes (Optional)</label>
+                                    <textarea id="expense-notes" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-teal-500 text-white px-4 py-2.5 text-sm font-semibold rounded-lg hover:bg-teal-600 transition-colors flex items-center justify-center space-x-2">
+                                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                    <span>Add Expense</span>
+                                </button>
+                            </form>
+                        </div>
+                         <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <h2 class="font-semibold text-lg mb-4">Spending Summary</h2>
+                            <div class="h-48 w-48 mx-auto mb-4">
+                                <canvas id="spending-pie-chart"></canvas>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-gray-500 text-sm">Total Spent This Month</p>
+                                <p id="total-spent-month" class="text-2xl font-bold"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="income-page" class="page-content hidden">
+                <header class="mb-8 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold">Income</h1>
+                        <p class="text-gray-500 mt-1">Track and manage your income.</p>
+                    </div>
+                    <button id="manage-sources-btn" class="bg-gray-200 text-gray-800 px-4 py-2 text-sm font-semibold rounded-lg hover:bg-gray-300 transition-colors flex items-center space-x-2">
+                        <i data-lucide="settings-2" class="w-4 h-4"></i>
+                        <span>Manage Sources</span>
+                    </button>
+                </header>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      <div class="lg:col-span-2">
+                        <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <h2 class="font-semibold text-lg mb-4">Income History</h2>
+                            <div id="income-history-list" class="space-y-2">
+                                </div>
+                        </div>
+                    </div>
+                      <div class="lg:col-span-1 space-y-8">
+                         <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <h2 class="font-semibold text-lg mb-4">Add New Income</h2>
+                            <form id="add-income-form" class="space-y-4">
+                                <div>
+                                    <label for="income-amount" class="block text-sm font-medium text-gray-700">Amount (₹)</label>
+                                    <input type="number" id="income-amount" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                </div>
+                                <div>
+                                    <label for="income-date" class="block text-sm font-medium text-gray-700">Date Received</label>
+                                    <input type="date" id="income-date" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                </div>
+                                <div>
+                                    <label for="income-source" class="block text-sm font-medium text-gray-700">Source</label>
+                                    <select id="income-source" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                       </select>
+                                </div>
+                                <div>
+                                    <label for="income-account" class="block text-sm font-medium text-gray-700">Deposit To</label>
+                                    <select id="income-account" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                                        <option value="">Select Account</option>
+                                        <option value="main">Main Account</option>
+                                        <option value="savings">Savings</option>
+                                    </select>
+                                </div>
+                                 <div>
+                                    <label for="income-notes" class="block text-sm font-medium text-gray-700">Notes (Optional)</label>
+                                    <textarea id="income-notes" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-green-500 text-white px-4 py-2.5 text-sm font-semibold rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center space-x-2">
+                                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                                    <span>Add Income</span>
+                                </button>
+                            </form>
+                        </div>
+                         <div class="bg-white p-6 rounded-xl shadow-sm">
+                            <h2 class="font-semibold text-lg mb-4">Income Summary</h2>
+                            <div class="h-48 w-48 mx-auto mb-4">
+                                <canvas id="income-pie-chart"></canvas>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-gray-500 text-sm">Total Income This Month</p>
+                                <p id="total-income-month" class="text-2xl font-bold"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+    
+    <div id="add-category-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
+            <h2 class="text-2xl font-bold mb-6">Add New Budget Category</h2>
+            <form id="add-category-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="category-name" class="block text-sm font-medium text-gray-700">Category Name</label>
+                        <input type="text" id="category-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label for="category-limit" class="block text-sm font-medium text-gray-700">Monthly Spending Limit (₹)</label>
+                        <input type="number" id="category-limit" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600">Add Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="add-bill-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+       <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
+            <h2 class="text-2xl font-bold mb-6">Add Recurring Bill</h2>
+            <form id="add-bill-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="bill-name" class="block text-sm font-medium text-gray-700">Bill Name</label>
+                        <input type="text" id="bill-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label for="bill-amount" class="block text-sm font-medium text-gray-700">Amount (₹)</label>
+                        <input type="number" id="bill-amount" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label for="bill-category" class="block text-sm font-medium text-gray-700">Budget Category</label>
+                        <select id="bill-category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            </select>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600">Add Bill</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="add-goal-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+       <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
+            <h2 class="text-2xl font-bold mb-6">Add New Savings Goal</h2>
+            <form id="add-goal-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="goal-name" class="block text-sm font-medium text-gray-700">Goal Name</label>
+                        <input type="text" id="goal-name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label for="goal-target" class="block text-sm font-medium text-gray-700">Target Amount (₹)</label>
+                        <input type="number" id="goal-target" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600">Add Goal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="update-account-balance-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+       <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
+            <h2 id="update-account-modal-title" class="text-2xl font-bold mb-6">Update Balance</h2>
+            <form id="update-account-balance-form">
+                <div class="space-y-4">
+                    <div>
+                        <label for="new-account-balance" class="block text-sm font-medium text-gray-700">New Balance Amount (₹)</label>
+                        <input type="number" id="new-account-balance" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="e.g., 950000">
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="edit-expense-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+       <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
+            <h2 class="text-2xl font-bold mb-6">Edit Expense</h2>
+            <form id="edit-expense-form">
+                <input type="hidden" id="edit-expense-id">
+                <div class="space-y-4">
+                    <div>
+                        <label for="edit-expense-amount" class="block text-sm font-medium text-gray-700">Amount (₹)</label>
+                        <input type="number" id="edit-expense-amount" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label for="edit-expense-date" class="block text-sm font-medium text-gray-700">Date</label>
+                        <input type="date" id="edit-expense-date" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                    </div>
+                    <div>
+                        <label for="edit-expense-category" class="block text-sm font-medium text-gray-700">Category</label>
+                        <select id="edit-expense-category" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            </select>
+                    </div>
+                    <div>
+                        <label for="edit-expense-source" class="block text-sm font-medium text-gray-700">Payment From</label>
+                        <select id="edit-expense-source" required class="mt-1 block w-full px-3 py-2 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                            <option value="main">Main Account</option>
+                            <option value="savings">Savings</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="edit-expense-notes" class="block text-sm font-medium text-gray-700">Notes (Optional)</label>
+                        <textarea id="edit-expense-notes" rows="2" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500"></textarea>
+                    </div>
+                </div>
+                <div class="mt-8 flex justify-end space-x-3">
+                    <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Cancel</button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-teal-500 rounded-lg hover:bg-teal-600">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="manage-sources-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md modal-enter">
+            <h2 class="text-2xl font-bold mb-6">Manage Income Sources</h2>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-2">Add New Source</h3>
+                <form id="add-source-form" class="flex gap-2">
+                    <input type="text" id="new-source-name" placeholder="e.g., Salary, Freelance" required class="flex-grow block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600">Add</button>
+                </form>
+            </div>
+            <div>
+                 <h3 class="text-lg font-semibold mb-2">Existing Sources</h3>
+                 <div id="income-sources-list" class="space-y-2 max-h-60 overflow-y-auto">
+                     </div>
+            </div>
+             <div class="mt-8 flex justify-end">
+                <button type="button" class="modal-close-btn px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            // --- SUPABASE INITIALIZATION ---
+            const SUPABASE_URL = 'https://xnhwiaebbaenxarnobtu.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhuaHdpYWViYmFlbnhhcm5vYnR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg1NTUxMjUsImV4cCI6MjA3NDEzMTEyNX0.ytMwIF56KMxpdHbbQSo0nEkRR8AEUnUWRyJPGkYP530';
+
+            const { createClient } = supabase;
+            const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            lucide.createIcons();
+            
+            // --- ELEMENT SELECTORS ---
+            const totalBalanceAmountEl = document.getElementById('total-balance-amount');
+            const mainAccountBalanceEl = document.getElementById('main-account-balance');
+            const savingsBalanceEl = document.getElementById('savings-balance');
+            const incomeBalanceEl = document.getElementById('income-balance');
+            
+            // --- STATE MANAGEMENT ---
+            let state = {
+                accounts: [],
+                budgetCategories: [],
+                recurringBills: [],
+                savingsGoals: [],
+                expenses: [],
+                income: [],
+                incomeSources: [],
+                get totalBalance() {
+                    return this.accounts.reduce((sum, acc) => sum + parseFloat(acc.balance), 0);
+                },
+                 get mainAccountBalance() {
+                    const main = this.accounts.find(a => a.account_name === 'Main Account');
+                    return main ? parseFloat(main.balance) : 0;
+                },
+                get savingsBalance() {
+                    const savings = this.accounts.find(a => a.account_name === 'Savings');
+                    return savings ? parseFloat(savings.balance) : 0;
+                },
+                get totalIncomeThisMonth() {
+                    const currentMonth = new Date().getMonth();
+                    const currentYear = new Date().getFullYear();
+                    return this.income
+                        .filter(inc => {
+                            const incDate = new Date(inc.date);
+                            return incDate.getMonth() === currentMonth && incDate.getFullYear() === currentYear;
+                        })
+                        .reduce((sum, inc) => sum + inc.amount, 0);
+                }
+            };
+            
+            const formatCurrency = (amount) => {
+                return amount.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+
+              // --- DATA LOADING ---
+            async function loadInitialData() {
+                const { data: accounts, error: accError } = await db.from('accounts').select('*');
+                if (accError) console.error("Error fetching accounts:", accError);
+                else state.accounts = accounts;
+
+                const { data: categories, error: catError } = await db.from('budget_categories').select('*');
+                if (catError) console.error("Error fetching categories:", catError);
+                else state.budgetCategories = categories;
+
+                const { data: bills, error: billError } = await db.from('recurring_bills').select('*, budget_categories(name)');
+                if (billError) {
+                    console.error("Error fetching bills:", billError);
+                } else {
+                     state.recurringBills = bills.map(b => ({
+                        id: b.id,
+                        name: b.name,
+                        amount: b.amount,
+                        category: b.budget_categories ? b.budget_categories.name : 'Uncategorized'
+                    }));
+                }
+
+                const { data: goals, error: goalError } = await db.from('savings_goals').select('*');
+                 if (goalError) console.error("Error fetching goals:", goalError);
+                else state.savingsGoals = goals;
+
+                const { data: expenses, error: expError } = await db.from('expenses').select('*, budget_categories(name), accounts(account_name)');
+                if (expError) {
+                    console.error("Error fetching expenses:", expError);
+                } else {
+                    state.expenses = expenses.map(e => ({
+                        id: e.id,
+                        amount: e.amount,
+                        date: e.expense_date,
+                        notes: e.notes,
+                        category: e.budget_categories ? e.budget_categories.name : 'Uncategorized',
+                        sourceAccount: e.accounts.account_name === 'Main Account' ? 'main' : 'savings'
+                    }));
+                }
+                
+                // Fetch Income Data
+                const { data: sources, error: sourceError } = await db.from('income_sources').select('*');
+                if (sourceError) console.error("Error fetching income sources:", sourceError);
+                else state.incomeSources = sources;
+
+                const { data: income, error: incomeError } = await db.from('income').select('*, income_sources(name), accounts(account_name)');
+                if (incomeError) {
+                    console.error("Error fetching income:", incomeError);
+                } else {
+                    state.income = income.map(i => ({
+                        id: i.id,
+                        amount: i.amount,
+                        date: i.income_date,
+                        notes: i.notes,
+                        source: i.income_sources ? i.income_sources.name : 'Uncategorized',
+                        depositAccount: i.accounts.account_name === 'Main Account' ? 'main' : 'savings'
+                    }));
+                }
+                
+                renderAllBalances();
+                initializeOverviewCharts();
+                renderTransactions();
+                renderBudgetsPage();
+                renderIncomePage(); // Render income page initially
+            }
+
+
+            // --- PAGE NAVIGATION ---
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page-content');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    navLinks.forEach(l => l.classList.remove('bg-gray-700', 'text-white'));
+                    this.classList.add('bg-gray-700', 'text-white');
+                    pages.forEach(p => p.classList.add('hidden'));
+                    document.getElementById(`${page}-page`).classList.remove('hidden');
+                    if (page === 'overview') {
+                        initializeOverviewCharts();
+                    } else if (page === 'expenses') {
+                        renderExpensesPage();
+                    } else if (page === 'budgets') {
+                        renderBudgetsPage();
+                    } else if (page === 'income') {
+                        renderIncomePage();
+                    }
+                });
+            });
+
+            // --- MODAL HANDLING ---
+            const modals = document.querySelectorAll('.fixed.inset-0');
+            const showModal = (modalId) => document.getElementById(modalId).classList.remove('hidden');
+            const hideModal = (modal) => {
+                modal.querySelector('.modal-enter').classList.replace('modal-enter', 'modal-leave');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.querySelector('.modal-leave').classList.replace('modal-leave', 'modal-enter');
+                }, 300);
+            };
+            
+            const populateCategoryDropdown = () => {
+                const select = document.getElementById('bill-category');
+                select.innerHTML = '<option value="">Select a category</option>';
+                state.budgetCategories.forEach(cat => {
+                    select.innerHTML += `<option value="${cat.name}">${cat.name}</option>`;
+                });
+            };
+
+            document.getElementById('add-category-btn').addEventListener('click', () => showModal('add-category-modal'));
+            document.getElementById('add-bill-btn').addEventListener('click', () => {
+                populateCategoryDropdown();
+                showModal('add-bill-modal');
+            });
+            document.getElementById('add-goal-btn').addEventListener('click', () => showModal('add-goal-modal'));
+            document.getElementById('manage-sources-btn').addEventListener('click', () => {
+                renderIncomeSourcesList();
+                showModal('manage-sources-modal');
+            });
+
+            modals.forEach(modal => {
+                modal.addEventListener('click', e => {
+                    if (e.target === modal || e.target.closest('.modal-close-btn')) {
+                        hideModal(modal);
+                    }
+                });
+            });
+
+            // --- ACCOUNT BALANCE LOGIC ---
+            const accountMenuBtns = document.querySelectorAll('.account-menu-btn');
+            const updateAccountBtns = document.querySelectorAll('.update-account-btn');
+            const updateAccountBalanceForm = document.getElementById('update-account-balance-form');
+            const updateAccountModalTitle = document.getElementById('update-account-modal-title');
+            
+            accountMenuBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const currentDropdown = document.querySelector(`[data-dropdown='${btn.dataset.account}']`);
+                    const isHidden = currentDropdown.classList.contains('hidden');
+                    document.querySelectorAll('.account-dropdown').forEach(d => d.classList.add('hidden'));
+                    if (isHidden) {
+                        currentDropdown.classList.remove('hidden');
+                    }
+                });
+            });
+
+            updateAccountBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const account = btn.dataset.account;
+                    btn.closest('.account-dropdown').classList.add('hidden');
+                    let title = "Update Balance";
+                    if (account === 'total') title = 'Update Total Balance';
+                    if (account === 'main') title = 'Update Main Account Balance';
+                    if (account === 'savings') title = 'Update Savings Balance';
+                    updateAccountModalTitle.textContent = title;
+                    updateAccountBalanceForm.dataset.accountToUpdate = account;
+                    showModal('update-account-balance-modal');
+                });
+            });
+            
+             updateAccountBalanceForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const accountNameToUpdate = e.target.dataset.accountToUpdate === 'main' ? 'Main Account' : 'Savings';
+                const newBalanceInput = document.getElementById('new-account-balance');
+                const newBalance = parseFloat(newBalanceInput.value);
+
+                if (!isNaN(newBalance)) {
+                    const account = state.accounts.find(a => a.account_name === accountNameToUpdate);
+                    if (account) {
+                        const { error } = await db.from('accounts').update({ balance: newBalance }).eq('id', account.id);
+                        if(error) {
+                            console.error("Error updating account balance:", error);
+                        } else {
+                            account.balance = newBalance;
+                            renderAllBalances();
+                            updateBalanceChart(state.totalBalance);
+                        }
+                    }
+                    
+                    hideModal(document.getElementById('update-account-balance-modal'));
+                    newBalanceInput.value = '';
+                }
+            });
+
+            // --- BUDGETS PAGE LOGIC ---
+            const budgetList = document.getElementById('budget-categories-list');
+            const addCategoryForm = document.getElementById('add-category-form');
+            const billsList = document.getElementById('recurring-bills-list');
+            const addBillForm = document.getElementById('add-bill-form');
+            const goalsList = document.getElementById('savings-goals-list');
+            const addGoalForm = document.getElementById('add-goal-form');
+
+            const renderBudgetsPage = () => {
+                renderBudgetCategories();
+                renderRecurringBills();
+                renderSavingsGoals();
+            };
+            const renderBudgetCategories = () => {
+                 let content = '';
+                if (state.budgetCategories.length === 0) {
+                    content = '<p class="text-sm text-gray-500">No budget categories added yet.</p>';
+                } else {
+                    state.budgetCategories.forEach(cat => {
+                        const spent = state.expenses
+                            .filter(e => e.category === cat.name)
+                            .reduce((sum, e) => sum + e.amount, 0);
+
+                        const percentage = cat.limit > 0 ? Math.min((spent / cat.limit) * 100, 100) : 0;
+                        let progressBarColor = 'bg-green-500';
+                        if (percentage > 90) progressBarColor = 'bg-red-500';
+                        else if (percentage > 70) progressBarColor = 'bg-yellow-500';
+
+                        content += `
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-center mb-1 text-sm">
+                                        <span class="font-medium">${cat.name}</span>
+                                        <span class="text-gray-500">
+                                            <span class="font-semibold text-gray-800">${formatCurrency(spent)}</span> / ${formatCurrency(cat.limit)}
+                                        </span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="${progressBarColor} h-2.5 rounded-full" style="width: ${percentage}%"></div>
+                                    </div>
+                                </div>
+                                <button data-id="${cat.id}" class="delete-category-btn text-gray-400 hover:text-red-500 transition-colors">
+                                    <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                </button>
+                            </div>
+                        `;
+                    });
+                }
+                budgetList.innerHTML = content;
+                lucide.createIcons();
+            };
+            addCategoryForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('category-name').value;
+                const limit = parseFloat(document.getElementById('category-limit').value);
+                
+                if (name && limit) {
+                    const { data: newCategory, error } = await db.from('budget_categories').insert({
+                        name: name,
+                        limit: limit
+                    }).select().single();
+
+                    if (error) {
+                        console.error('Error adding category:', error);
+                        return;
+                    }
+
+                    state.budgetCategories.push(newCategory);
+                    renderBudgetsPage();
+                    addCategoryForm.reset();
+                    hideModal(document.getElementById('add-category-modal'));
+                }
+            });
+            budgetList.addEventListener('click', async (e) => {
+                const deleteBtn = e.target.closest('.delete-category-btn');
+                if (deleteBtn) {
+                    const categoryId = parseInt(deleteBtn.dataset.id);
+                    const { error } = await db.from('budget_categories').delete().eq('id', categoryId);
+
+                    if (error) {
+                        if (error.code === '23503') { 
+                            alert('Cannot delete this category because it has associated expenses or bills. Please reassign or delete them first.');
+                        } else {
+                           console.error('Error deleting category:', error);
+                        }
+                        return;
+                    }
+                    
+                    state.budgetCategories = state.budgetCategories.filter(cat => cat.id !== categoryId);
+                    renderBudgetsPage();
+                }
+            });
+            const renderRecurringBills = () => {
+                 let content = '';
+                if (state.recurringBills.length === 0) {
+                    content = '<p class="text-sm text-gray-500">No recurring bills added yet.</p>';
+                } else {
+                    state.recurringBills.forEach(bill => {
+                        content += `
+                            <div class="flex justify-between items-center p-2 rounded-lg hover:bg-gray-50">
+                                <div class="flex-1">
+                                    <p class="font-medium">${bill.name}</p>
+                                    <p class="text-xs text-gray-500">${bill.category}</p>
+                                </div>
+                                <span class="font-semibold mr-4">${formatCurrency(bill.amount)}</span>
+                                 <button data-id="${bill.id}" class="delete-bill-btn text-gray-400 hover:text-red-500 transition-colors">
+                                    <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                </button>
+                            </div>
+                        `;
+                    });
+                }
+                billsList.innerHTML = content;
+                lucide.createIcons();
+            };
+             addBillForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('bill-name').value;
+                const amount = parseFloat(document.getElementById('bill-amount').value);
+                const categoryName = document.getElementById('bill-category').value;
+                
+                if (name && amount && categoryName) {
+                    const category = state.budgetCategories.find(c => c.name === categoryName);
+                    if (!category) {
+                        console.error("Category not found");
+                        return;
+                    }
+
+                    const { data: newBill, error } = await db.from('recurring_bills').insert({
+                        name: name,
+                        amount: amount,
+                        category_id: category.id
+                    }).select('*, budget_categories(name)').single();
+                    
+                    if (error) {
+                        console.error('Error adding bill:', error);
+                        return;
+                    }
+
+                    state.recurringBills.push({
+                        id: newBill.id,
+                        name: newBill.name,
+                        amount: newBill.amount,
+                        category: newBill.budget_categories.name
+                    });
+
+                    renderRecurringBills();
+                    addBillForm.reset();
+                    hideModal(document.getElementById('add-bill-modal'));
+                }
+            });
+
+            billsList.addEventListener('click', async (e) => {
+                const deleteBtn = e.target.closest('.delete-bill-btn');
+                if (deleteBtn) {
+                    const billId = parseInt(deleteBtn.dataset.id);
+                    const { error } = await db.from('recurring_bills').delete().eq('id', billId);
+                    if (error) {
+                        console.error('Error deleting bill:', error);
+                        return;
+                    }
+                    state.recurringBills = state.recurringBills.filter(bill => bill.id !== billId);
+                    renderRecurringBills();
+                }
+            });
+            const renderSavingsGoals = () => {
+                let content = '';
+                 if (state.savingsGoals.length === 0) {
+                    content = '<p class="text-sm text-gray-500">No savings goals added yet.</p>';
+                } else {
+                    state.savingsGoals.forEach(goal => {
+                        const percentage = goal.target_amount > 0 ? Math.min((goal.saved_amount / goal.target_amount) * 100, 100) : 0;
+                        content += `
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-1">
+                                    <div class="flex justify-between items-center mb-1 text-sm font-medium">
+                                        <span>${goal.name}</span>
+                                        <span>${Math.round(percentage)}%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-indigo-500 h-2.5 rounded-full" style="width: ${percentage}%"></div>
+                                    </div>
+                                    <div class="text-right text-xs text-gray-500 mt-1">
+                                        ${formatCurrency(goal.saved_amount)} / ${formatCurrency(goal.target_amount)}
+                                    </div>
+                                </div>
+                                <button data-id="${goal.id}" class="delete-goal-btn text-gray-400 hover:text-red-500 transition-colors">
+                                    <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                                </button>
+                            </div>
+                        `;
+                    });
+                }
+                goalsList.innerHTML = content;
+                lucide.createIcons();
+            };
+            addGoalForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('goal-name').value;
+                const target = parseFloat(document.getElementById('goal-target').value);
+
+                if (name && target) {
+                    const { data: newGoal, error } = await db.from('savings_goals').insert({
+                        name: name,
+                        target_amount: target,
+                        saved_amount: 0
+                    }).select().single();
+
+                    if (error) {
+                        console.error('Error adding savings goal:', error);
+                        return;
+                    }
+
+                    state.savingsGoals.push(newGoal);
+                    renderSavingsGoals();
+                    addGoalForm.reset();
+                    hideModal(document.getElementById('add-goal-modal'));
+                }
+            });
+
+            goalsList.addEventListener('click', async (e) => {
+                const deleteBtn = e.target.closest('.delete-goal-btn');
+                if (deleteBtn) {
+                    const goalId = parseInt(deleteBtn.dataset.id);
+                    const { error } = await db.from('savings_goals').delete().eq('id', goalId);
+
+                    if (error) {
+                        console.error('Error deleting savings goal:', error);
+                        return;
+                    }
+
+                    state.savingsGoals = state.savingsGoals.filter(goal => goal.id !== goalId);
+                    renderSavingsGoals();
+                }
+            });
+            
+            // --- EXPENSES PAGE LOGIC ---
+            const addExpenseForm = document.getElementById('add-expense-form');
+            const expenseHistoryList = document.getElementById('expense-history-list');
+            const editExpenseForm = document.getElementById('edit-expense-form');
+            const totalSpentMonthEl = document.getElementById('total-spent-month');
+            let spendingPieChart;
+
+            const renderExpensesPage = () => {
+                populateExpenseCategoryDropdowns();
+                renderExpenseHistory();
+                renderSpendingSummary();
+                document.getElementById('expense-date').valueAsDate = new Date(); // Default to today
+            };
+            
+            const populateExpenseCategoryDropdowns = () => {
+                const selects = [
+                    document.getElementById('expense-category'), 
+                    document.getElementById('expense-category-filter'),
+                    document.getElementById('edit-expense-category')
+                ];
+                selects.forEach(select => {
+                    const currentValue = select.value;
+                    let options = (select.id === 'expense-category-filter') ? '<option value="all">All Categories</option>' : '<option value="">Select a Category</option>';
+                    state.budgetCategories.forEach(cat => {
+                        options += `<option value="${cat.name}">${cat.name}</option>`;
+                    });
+                    select.innerHTML = options;
+                    select.value = currentValue;
+                });
+            };
+
+            const renderExpenseHistory = () => {
+                const searchTerm = document.getElementById('expense-search-input').value.toLowerCase();
+                const categoryFilter = document.getElementById('expense-category-filter').value;
+                const dateFilter = document.getElementById('expense-date-filter').value;
+
+                let filteredExpenses = state.expenses.filter(exp => {
+                    const noteMatch = exp.notes ? exp.notes.toLowerCase().includes(searchTerm) : false;
+                    const matchesSearch = searchTerm === '' || noteMatch;
+                    const matchesCategory = categoryFilter === 'all' || exp.category === categoryFilter;
+                    const matchesDate = dateFilter === '' || exp.date === dateFilter;
+                    return matchesSearch && matchesCategory && matchesDate;
+                });
+
+                filteredExpenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                if (filteredExpenses.length === 0) {
+                    expenseHistoryList.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">No expenses found for the selected criteria.</p>';
+                    return;
+                }
+
+                expenseHistoryList.innerHTML = filteredExpenses.map(exp => `
+                    <div class="grid grid-cols-10 gap-2 items-center p-2 rounded-lg hover:bg-gray-50 text-sm">
+                        <span class="col-span-2 text-gray-600">${new Date(exp.date).toLocaleDateString('en-GB')}</span>
+                        <span class="col-span-3 font-medium truncate" title="${exp.notes}">${exp.notes || 'N/A'}</span>
+                        <span class="col-span-2 text-gray-500">${exp.category}</span>
+                        <span class="col-span-2 font-semibold text-right">${formatCurrency(exp.amount)}</span>
+                        <div class="col-span-1 flex justify-end space-x-2">
+                            <button data-id="${exp.id}" class="edit-expense-btn text-gray-400 hover:text-blue-500"><i data-lucide="edit" class="w-4 h-4 pointer-events-none"></i></button>
+                            <button data-id="${exp.id}" class="delete-expense-btn text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            };
+            const renderSpendingSummary = () => {
+                const currentMonth = new Date().getMonth();
+                const currentYear = new Date().getFullYear();
+
+                const monthlyExpenses = state.expenses.filter(exp => {
+                    const expDate = new Date(exp.date);
+                    return expDate.getMonth() === currentMonth && expDate.getFullYear() === currentYear;
+                });
+
+                const totalSpent = monthlyExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+                totalSpentMonthEl.textContent = formatCurrency(totalSpent);
+                
+                const spendingByCategory = monthlyExpenses.reduce((acc, exp) => {
+                    acc[exp.category] = (acc[exp.category] || 0) + exp.amount;
+                    return acc;
+                }, {});
+
+                const chartLabels = Object.keys(spendingByCategory);
+                const chartData = Object.values(spendingByCategory);
+                
+                const pieCtx = document.getElementById('spending-pie-chart').getContext('2d');
+                if (spendingPieChart) {
+                    spendingPieChart.destroy();
+                }
+                spendingPieChart = new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{ data: chartData, backgroundColor: ['#2DD4BF', '#818CF8', '#FBBF24', '#38BDF8', '#F87171', '#A78BFA'], borderWidth: 0 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            };
+
+            addExpenseForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const amount = parseFloat(document.getElementById('expense-amount').value);
+                const date = document.getElementById('expense-date').value;
+                const categoryName = document.getElementById('expense-category').value;
+                const sourceAccountName = document.getElementById('expense-source').value === 'main' ? 'Main Account' : 'Savings';
+                const notes = document.getElementById('expense-notes').value;
+                
+                if (amount && date && categoryName && sourceAccountName) {
+                    const category = state.budgetCategories.find(c => c.name === categoryName);
+                    const account = state.accounts.find(a => a.account_name === sourceAccountName);
+
+                    if (!category || !account) {
+                        console.error("Category or Account not found in state");
+                        return;
+                    }
+
+                    // 1. Insert into DB
+                    const { data: newExpense, error: insertError } = await db.from('expenses').insert({
+                        amount,
+                        expense_date: date,
+                        category_id: category.id,
+                        account_id: account.id,
+                        notes
+                    }).select('*, budget_categories(name), accounts(account_name)').single();
+
+                    if(insertError) {
+                        console.error("Error inserting expense:", insertError);
+                        return;
+                    }
+
+                    // 2. Update account balance in DB
+                    const newBalance = parseFloat(account.balance) - amount;
+                    const { error: updateError } = await db.from('accounts').update({ balance: newBalance }).eq('id', account.id);
+
+                    if(updateError){
+                         console.error("Error updating balance:", updateError);
+                         // TODO: Maybe delete the inserted expense here for consistency
+                         return;
+                    }
+
+                    // 3. Update local state
+                    state.expenses.push({
+                        id: newExpense.id,
+                        amount: newExpense.amount,
+                        date: newExpense.expense_date,
+                        notes: newExpense.notes,
+                        category: newExpense.budget_categories.name,
+                        sourceAccount: newExpense.accounts.account_name === 'Main Account' ? 'main' : 'savings'
+                    });
+                    account.balance = newBalance;
+
+                    // 4. Re-render UI
+                    renderAllBalances();
+                    updateBalanceChart(state.totalBalance);
+                    renderExpenseHistory();
+                    renderSpendingSummary();
+                    renderTransactions();
+                    renderBudgetsPage(); // To update spent amounts
+                    addExpenseForm.reset();
+                    document.getElementById('expense-date').valueAsDate = new Date();
+                }
+            });
+            
+            document.getElementById('expense-search-input').addEventListener('input', renderExpenseHistory);
+            document.getElementById('expense-category-filter').addEventListener('change', renderExpenseHistory);
+            document.getElementById('expense-date-filter').addEventListener('change', renderExpenseHistory);
+            
+            expenseHistoryList.addEventListener('click', (e) => {
+                const editBtn = e.target.closest('.edit-expense-btn');
+                if (editBtn) {
+                    const expenseId = parseInt(editBtn.dataset.id);
+                    const expenseToEdit = state.expenses.find(exp => exp.id === expenseId);
+                    if (expenseToEdit) {
+                        document.getElementById('edit-expense-id').value = expenseToEdit.id;
+                        document.getElementById('edit-expense-amount').value = expenseToEdit.amount;
+                        document.getElementById('edit-expense-date').value = expenseToEdit.date;
+                        document.getElementById('edit-expense-category').value = expenseToEdit.category;
+                        document.getElementById('edit-expense-source').value = expenseToEdit.sourceAccount;
+                        document.getElementById('edit-expense-notes').value = expenseToEdit.notes;
+                        showModal('edit-expense-modal');
+                    }
+                }
+            });
+
+            editExpenseForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = parseInt(document.getElementById('edit-expense-id').value);
+                const originalExpense = state.expenses.find(exp => exp.id === id);
+
+                const newAmount = parseFloat(document.getElementById('edit-expense-amount').value);
+                const newDate = document.getElementById('edit-expense-date').value;
+                const newCategoryName = document.getElementById('edit-expense-category').value;
+                const newSource = document.getElementById('edit-expense-source').value;
+                const newNotes = document.getElementById('edit-expense-notes').value;
+                
+                const newCategory = state.budgetCategories.find(c => c.name === newCategoryName);
+                if (!newCategory) return;
+                
+                // 1. Revert old transaction from accounts
+                const originalAccount = state.accounts.find(a => a.account_name.toLowerCase().startsWith(originalExpense.sourceAccount));
+                originalAccount.balance += originalExpense.amount;
+                
+                // 2. Apply new transaction to accounts
+                const newAccount = state.accounts.find(a => a.account_name.toLowerCase().startsWith(newSource));
+                newAccount.balance -= newAmount;
+                
+                // 3. Update database
+                await db.from('expenses').update({
+                    amount: newAmount,
+                    expense_date: newDate,
+                    category_id: newCategory.id,
+                    account_id: newAccount.id,
+                    notes: newNotes
+                }).eq('id', id);
+
+                await db.from('accounts').update({ balance: originalAccount.balance }).eq('id', originalAccount.id);
+                if (originalAccount.id !== newAccount.id) {
+                    await db.from('accounts').update({ balance: newAccount.balance }).eq('id', newAccount.id);
+                }
+
+                // 4. Update state & re-render
+                const index = state.expenses.findIndex(exp => exp.id === id);
+                state.expenses[index] = { ...originalExpense, amount: newAmount, date: newDate, category: newCategoryName, sourceAccount: newSource, notes: newNotes };
+                
+                await loadInitialData(); // Easiest way to ensure all states are in sync
+                hideModal(document.getElementById('edit-expense-modal'));
+            });
+
+            // --- INCOME PAGE LOGIC ---
+            const addIncomeForm = document.getElementById('add-income-form');
+            const incomeHistoryList = document.getElementById('income-history-list');
+            const totalIncomeMonthEl = document.getElementById('total-income-month');
+            const addSourceForm = document.getElementById('add-source-form');
+            const incomeSourcesList = document.getElementById('income-sources-list');
+            let incomePieChart;
+
+            const renderIncomePage = () => {
+                populateIncomeSourceDropdowns();
+                renderIncomeHistory();
+                renderIncomeSummary();
+                document.getElementById('income-date').valueAsDate = new Date();
+            };
+
+            const populateIncomeSourceDropdowns = () => {
+                const select = document.getElementById('income-source');
+                let options = '<option value="">Select a Source</option>';
+                state.incomeSources.forEach(source => {
+                    options += `<option value="${source.name}">${source.name}</option>`;
+                });
+                select.innerHTML = options;
+            };
+
+            const renderIncomeHistory = () => {
+                let content = '';
+                const sortedIncome = [...state.income].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                if (sortedIncome.length === 0) {
+                    incomeHistoryList.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">No income recorded yet.</p>';
+                    return;
+                }
+                
+                sortedIncome.forEach(inc => {
+                    content += `
+                        <div class="grid grid-cols-10 gap-2 items-center p-2 rounded-lg hover:bg-gray-50 text-sm">
+                            <span class="col-span-2 text-gray-600">${new Date(inc.date).toLocaleDateString('en-GB')}</span>
+                            <span class="col-span-3 font-medium text-green-700">${inc.source}</span>
+                            <span class="col-span-3 text-gray-500 truncate" title="${inc.notes}">${inc.notes || 'N/A'}</span>
+                            <span class="col-span-2 font-semibold text-right text-green-600">${formatCurrency(inc.amount)}</span>
+                        </div>`;
+                });
+                incomeHistoryList.innerHTML = content;
+            };
+
+            const renderIncomeSummary = () => {
+                totalIncomeMonthEl.textContent = formatCurrency(state.totalIncomeThisMonth);
+
+                const incomeBySource = state.income.reduce((acc, inc) => {
+                    acc[inc.source] = (acc[inc.source] || 0) + inc.amount;
+                    return acc;
+                }, {});
+
+                const chartLabels = Object.keys(incomeBySource);
+                const chartData = Object.values(incomeBySource);
+
+                const pieCtx = document.getElementById('income-pie-chart').getContext('2d');
+                if (incomePieChart) {
+                    incomePieChart.destroy();
+                }
+                incomePieChart = new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{ data: chartData, backgroundColor: ['#22C55E', '#84CC16', '#FACC15', '#38BDF8', '#A78BFA'], borderWidth: 0 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            };
+
+            addIncomeForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const amount = parseFloat(document.getElementById('income-amount').value);
+                const date = document.getElementById('income-date').value;
+                const sourceName = document.getElementById('income-source').value;
+                const depositAccountName = document.getElementById('income-account').value === 'main' ? 'Main Account' : 'Savings';
+                const notes = document.getElementById('income-notes').value;
+
+                if (amount && date && sourceName && depositAccountName) {
+                    const source = state.incomeSources.find(s => s.name === sourceName);
+                    const account = state.accounts.find(a => a.account_name === depositAccountName);
+
+                    if (!source || !account) {
+                        console.error("Source or Account not found in state");
+                        return;
+                    }
+
+                    const { data: newIncome, error: insertError } = await db.from('income').insert({
+                        amount,
+                        income_date: date,
+                        source_id: source.id,
+                        account_id: account.id,
+                        notes
+                    }).select('*, income_sources(name), accounts(account_name)').single();
+
+                    if (insertError) {
+                        console.error("Error inserting income:", insertError);
+                        return;
+                    }
+
+                    const newBalance = parseFloat(account.balance) + amount;
+                    const { error: updateError } = await db.from('accounts').update({ balance: newBalance }).eq('id', account.id);
+
+                    if (updateError) {
+                        console.error("Error updating balance after income:", updateError);
+                        return;
+                    }
+
+                    state.income.push({
+                        id: newIncome.id,
+                        amount: newIncome.amount,
+                        date: newIncome.income_date,
+                        notes: newIncome.notes,
+                        source: newIncome.income_sources.name,
+                        depositAccount: newIncome.accounts.account_name === 'Main Account' ? 'main' : 'savings'
+                    });
+                    account.balance = newBalance;
+
+                    renderAllBalances();
+                    updateBalanceChart(state.totalBalance);
+                    renderIncomePage();
+                    addIncomeForm.reset();
+                    document.getElementById('income-date').valueAsDate = new Date();
+                }
+            });
+            
+            const renderIncomeSourcesList = () => {
+                incomeSourcesList.innerHTML = state.incomeSources.map(source => `
+                    <div class="flex justify-between items-center p-2 rounded-lg bg-gray-50">
+                        <span>${source.name}</span>
+                        <button data-id="${source.id}" class="delete-source-btn text-gray-400 hover:text-red-500">
+                            <i data-lucide="trash-2" class="w-4 h-4 pointer-events-none"></i>
+                        </button>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            };
+
+            addSourceForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const nameInput = document.getElementById('new-source-name');
+                const name = nameInput.value.trim();
+                if (name) {
+                    const { data: newSource, error } = await db.from('income_sources').insert({ name }).select().single();
+                    if (error) {
+                        console.error('Error adding source:', error);
+                        alert('Failed to add new source. Check console for details.');
+                        return;
+                    }
+                    state.incomeSources.push(newSource);
+                    renderIncomeSourcesList();
+                    populateIncomeSourceDropdowns();
+                    nameInput.value = '';
+                }
+            });
+
+            incomeSourcesList.addEventListener('click', async (e) => {
+                const deleteBtn = e.target.closest('.delete-source-btn');
+                if (deleteBtn) {
+                    const sourceId = parseInt(deleteBtn.dataset.id);
+                    const { error } = await db.from('income_sources').delete().eq('id', sourceId);
+                    if (error) {
+                         alert('Cannot delete this source as it is linked to existing income records.');
+                         console.error('Error deleting source:', error);
+                         return;
+                    }
+                    state.incomeSources = state.incomeSources.filter(s => s.id !== sourceId);
+                    renderIncomeSourcesList();
+                    populateIncomeSourceDropdowns();
+                }
+            });
+
+            // --- OVERVIEW PAGE LOGIC ---
+            let accountBalanceChart;
+
+            const updateBalanceChart = (newTotal) => {
+                if (accountBalanceChart) {
+                    const data = accountBalanceChart.data.datasets[0].data;
+                    data[data.length - 1] = newTotal;
+                    accountBalanceChart.update();
+                }
+            };
+            const initializeOverviewCharts = () => {
+                if (accountBalanceChart) {
+                    accountBalanceChart.destroy();
+                }
+                
+                const chartData = generateDynamicChartData();
+
+                const balanceCtx = document.getElementById('accountBalanceChart').getContext('2d');
+                const gradient = balanceCtx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(74, 222, 128, 0.3)');
+                gradient.addColorStop(1, 'rgba(74, 222, 128, 0)');
+
+                accountBalanceChart = new Chart(balanceCtx, {
+                    type: 'line', 
+                    data: { labels: chartData.year.labels, datasets: [{ data: chartData.year.data, borderColor: '#2DD4BF', backgroundColor: gradient, fill: true, tension: 0.4, pointRadius: 0, pointHoverRadius: 6, pointHoverBackgroundColor: '#fff', pointHoverBorderColor: '#2DD4BF' }] },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true, ticks: { callback: (value) => '₹' + (value / 1000) + 'k' } }, x: { grid: { display: false } } },
+                        plugins: { 
+                            legend: { display: false }, 
+                            tooltip: { 
+                                enabled: false, 
+                                external: function(context) { 
+                                    let tooltipEl = document.getElementById('chartjs-tooltip'); 
+                                    if (!tooltipEl) { 
+                                        tooltipEl = document.createElement('div'); 
+                                        tooltipEl.id = 'chartjs-tooltip'; 
+                                        document.body.appendChild(tooltipEl); 
+                                    } 
+                                    const tooltipModel = context.tooltip; 
+                                    if (tooltipModel.opacity === 0) { 
+                                        tooltipEl.style.opacity = 0; 
+                                        return; 
+                                    } 
+                                    if (tooltipModel.body) { 
+                                        const dataPoints = tooltipModel.dataPoints; 
+                                        if (dataPoints.length > 0) { 
+                                            const date = dataPoints[0].label; 
+                                            const value = formatCurrency(dataPoints[0].raw); 
+                                            tooltipEl.innerHTML = `<div class="text-center p-2 bg-gray-800 text-white rounded-lg shadow-lg"><div class="text-xs text-gray-400">${date}</div><div class="text-base font-bold">${value}</div></div>`; 
+                                        } 
+                                    } 
+                                    const { offsetLeft: canvasLeft, offsetTop: canvasTop } = context.chart.canvas; 
+                                    tooltipEl.style.opacity = 1; 
+                                    tooltipEl.style.position = 'absolute'; 
+                                    tooltipEl.style.left = canvasLeft + tooltipModel.caretX - (tooltipEl.offsetWidth / 2) + 'px'; 
+                                    tooltipEl.style.top = canvasTop + tooltipModel.caretY - tooltipEl.offsetHeight - 10 + 'px'; 
+                                    tooltipEl.style.pointerEvents = 'none';
+                                } 
+                            } 
+                        }
+                    }
+                });
+
+                const filterButtons = document.querySelectorAll('.chart-filter-btn');
+                filterButtons.forEach(button => {
+                     button.addEventListener('click', function() {
+                        filterButtons.forEach(btn => btn.classList.remove('active', 'bg-white', 'text-gray-800'));
+                        this.classList.add('active', 'bg-white', 'text-gray-800');
+                        const period = this.dataset.period;
+                        accountBalanceChart.data.labels = chartData[period].labels;
+                        accountBalanceChart.data.datasets[0].data = chartData[period].data;
+                        accountBalanceChart.update();
+                    });
+                });
+            }
+            const transactionsList = document.getElementById('transactions-list');
+            const seeAllBtn = document.getElementById('see-all-transactions');
+            let transactionsVisible = 3;
+
+            const renderTransactions = () => { 
+                const sortedExpenses = [...state.expenses].sort((a, b) => new Date(b.date) - new Date(a.date));
+                transactionsList.innerHTML = '';
+                
+                const formatDateForOverview = (dateString) => {
+                    const date = new Date(dateString);
+                    const today = new Date();
+                    const yesterday = new Date();
+                    yesterday.setDate(today.getDate() - 1);
+
+                    if (date.toDateString() === today.toDateString()) return 'Today';
+                    if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+                    return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+                };
+
+                if(sortedExpenses.length === 0) {
+                    transactionsList.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">No recent transactions.</p>';
+                    return;
+                }
+
+                sortedExpenses.slice(0, transactionsVisible).forEach(exp => {
+                    const name = exp.notes || exp.category;
+                    const avatar = name.charAt(0).toUpperCase();
+                    
+                    transactionsList.innerHTML += `
+                        <div class="grid grid-cols-6 items-center">
+                            <div class="col-span-3 flex items-center space-x-4">
+                                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-600">${avatar}</div>
+                                <span class="font-medium truncate" title="${name}">${name}</span>
+                            </div>
+                            <span class="col-span-1 text-gray-500 text-sm">${formatDateForOverview(exp.date)}</span>
+                            <div class="col-span-2 flex justify-end items-center space-x-4">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+                                <span class="font-semibold text-right">${formatCurrency(-exp.amount)}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                lucide.createIcons();
+             };
+            seeAllBtn.addEventListener('click', (e) => { 
+                e.preventDefault();
+                transactionsVisible = (transactionsVisible === 3) ? state.expenses.length : 3;
+                seeAllBtn.textContent = (transactionsVisible === 3) ? 'See all' : 'Show less';
+                renderTransactions();
+             });
+
+
+            // --- INITIALIZATION ---
+            const renderAllBalances = () => {
+                totalBalanceAmountEl.textContent = formatCurrency(state.totalBalance);
+                mainAccountBalanceEl.textContent = formatCurrency(state.mainAccountBalance);
+                savingsBalanceEl.textContent = formatCurrency(state.savingsBalance);
+                if (incomeBalanceEl) {
+                    incomeBalanceEl.textContent = formatCurrency(state.totalIncomeThisMonth);
+                }
+            };
+            
+            const generateDynamicChartData = () => {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                const currentMonth = now.getMonth();
+                const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                
+                // --- Year Data ---
+                let runningBalance = state.totalBalance;
+                const yearDataPoints = Array(currentMonth + 1).fill(0);
+                for (let i = currentMonth; i >= 0; i--) {
+                    yearDataPoints[i] = runningBalance;
+                    
+                    const monthTransactions = state.expenses
+                        .filter(exp => {
+                            const d = new Date(exp.date);
+                            return d.getFullYear() === currentYear && d.getMonth() === i;
+                        })
+                        .reduce((sum, exp) => sum + exp.amount, 0);
+                    
+                    const monthIncome = state.income
+                        .filter(inc => {
+                             const d = new Date(inc.date);
+                            return d.getFullYear() === currentYear && d.getMonth() === i;
+                        })
+                        .reduce((sum, inc) => sum + inc.amount, 0);
+
+                    runningBalance = runningBalance + monthTransactions - monthIncome;
+                }
+
+                // --- Month Data (Last 4 weeks) ---
+                const monthDataPoints = [];
+                const weekLabels = [];
+                let weekRunningBalance = state.totalBalance;
+                for (let i = 0; i < 4; i++) {
+                    const weekEnd = new Date(now.getTime() - (i * 7 * 24 * 60 * 60 * 1000));
+                    const weekStart = new Date(now.getTime() - ((i + 1) * 7 * 24 * 60 * 60 * 1000));
+                    monthDataPoints.unshift(weekRunningBalance);
+                    weekLabels.unshift(`Week of ${weekStart.toLocaleDateString('en-GB', {day:'2-digit', month:'short'})}`);
+
+                    const weekExpenses = state.expenses
+                        .filter(exp => {
+                            const expDate = new Date(exp.date);
+                            return expDate > weekStart && expDate <= weekEnd;
+                        })
+                        .reduce((sum, exp) => sum + exp.amount, 0);
+                        
+                    const weekIncome = state.income
+                         .filter(inc => {
+                            const incDate = new Date(inc.date);
+                            return incDate > weekStart && incDate <= weekEnd;
+                        })
+                        .reduce((sum, inc) => sum + inc.amount, 0);
+                        
+                    weekRunningBalance = weekRunningBalance + weekExpenses - weekIncome;
+                }
+                
+                // --- Week Data (Last 7 days) ---
+                const weekDataPoints = [];
+                const dayLabels = [];
+                let dayRunningBalance = state.totalBalance;
+                for (let i = 0; i < 7; i++) {
+                      const day = new Date(now.getTime() - (i * 24 * 60 * 60 * 1000));
+                      weekDataPoints.unshift(dayRunningBalance);
+                      dayLabels.unshift(day.toLocaleDateString('en-US', { weekday: 'short' }));
+                      
+                      const dayExpenses = state.expenses.filter(exp => new Date(exp.date).toDateString() === day.toDateString())
+                                                       .reduce((sum, exp) => sum + exp.amount, 0);
+                      const dayIncome = state.income.filter(inc => new Date(inc.date).toDateString() === day.toDateString())
+                                                       .reduce((sum, inc) => sum + inc.amount, 0);
+                                                       
+                      dayRunningBalance = dayRunningBalance + dayExpenses - dayIncome;
+                }
+
+                return {
+                    year: { labels: monthLabels.slice(0, currentMonth + 1), data: yearDataPoints },
+                    month: { labels: weekLabels, data: monthDataPoints },
+                    week: { labels: dayLabels, data: weekDataPoints },
+                    day: { labels: ['Start of Day', 'Current'], data: [dayRunningBalance, state.totalBalance] } // Simplified day view
+                };
+            };
+
+
+            await loadInitialData();
+        });
+    </script>
+</body>
+</html>
