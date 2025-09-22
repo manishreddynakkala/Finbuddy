@@ -44,6 +44,25 @@
             from { opacity: 1; transform: scale(1); }
             to { opacity: 0; transform: scale(0.95); }
         }
+        /* Styles for collapsible sidebar */
+        body.sidebar-collapsed aside {
+            width: 5rem; /* w-20 */
+        }
+        body.sidebar-collapsed .nav-text,
+        body.sidebar-collapsed #sidebar-title,
+        body.sidebar-collapsed #sidebar-footer,
+        body.sidebar-collapsed .toggle-icon-collapse {
+            display: none;
+        }
+        body.sidebar-collapsed .toggle-icon-expand {
+            display: block;
+        }
+        body.sidebar-collapsed aside nav a {
+            justify-content: center;
+        }
+        .toggle-icon-expand {
+            display: none;
+        }
     </style>
      <script>
         // Set theme on initial load to prevent flash of unstyled content
@@ -60,10 +79,10 @@
         <!-- =================================================================
             LEFT NAVIGATION SIDEBAR
         ================================================================== -->
-        <aside class="w-64 flex-shrink-0 bg-gray-800 dark:bg-gray-900 text-gray-300 flex flex-col p-4 border-r border-gray-200 dark:border-gray-700">
+        <aside class="w-64 flex-shrink-0 bg-gray-800 dark:bg-gray-900 text-gray-300 flex flex-col p-4 border-r border-gray-200 dark:border-gray-700 transition-all duration-300">
             <div class="flex items-center space-x-2 mb-10 px-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
-                <h1 class="text-2xl font-bold text-white">FinBuddy</h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-teal-400 flex-shrink-0"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+                <h1 id="sidebar-title" class="text-2xl font-bold text-white">FinBuddy</h1>
             </div>
             
             <nav class="flex-1" id="main-nav">
@@ -71,43 +90,43 @@
                     <li>
                         <a href="#" data-page="overview" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg bg-gray-700 text-white">
                             <i data-lucide="layout-dashboard"></i>
-                            <span>Overview</span>
+                            <span class="nav-text">Overview</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" data-page="budgets" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             <i data-lucide="piggy-bank"></i>
-                            <span>Budgets</span>
+                            <span class="nav-text">Budgets</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" data-page="expenses" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             <i data-lucide="receipt"></i>
-                            <span>Expenses</span>
+                            <span class="nav-text">Expenses</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" data-page="income" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
                              <i data-lucide="dollar-sign"></i>
-                            <span>Income</span>
+                            <span class="nav-text">Income</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" data-page="reports" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             <i data-lucide="bar-chart-3"></i>
-                            <span>Reports</span>
+                            <span class="nav-text">Reports</span>
                         </a>
                     </li>
                     <li>
                         <a href="#" data-page="settings" class="nav-link flex items-center space-x-3 px-3 py-2.5 rounded-lg hover:bg-gray-700 transition-colors duration-200">
                             <i data-lucide="settings"></i>
-                            <span>Settings</span>
+                            <span class="nav-text">Settings</span>
                         </a>
                     </li>
                 </ul>
             </nav>
             
-            <div class="mt-auto">
+            <div id="sidebar-footer">
                 <div class="bg-gray-700/50 dark:bg-gray-800 rounded-lg p-4 text-center">
                     <p class="text-sm text-gray-200">Have a question?</p>
                     <p class="text-xs text-gray-400 mt-1">Reach out to gundu via phone or email.</p>
@@ -125,22 +144,32 @@
 
                 <a href="#" class="flex items-center space-x-3 px-3 py-4 mt-2 rounded-lg text-pink-400 hover:bg-gray-700 transition-colors duration-200">
                     <i data-lucide="heart"></i>
-                    <span>With love</span>
+                    <span class="nav-text">With love</span>
                 </a>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-auto pt-2">
+                <button id="sidebar-toggle" class="w-full flex items-center justify-center p-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg">
+                    <i data-lucide="chevrons-left" class="toggle-icon-collapse"></i>
+                    <i data-lucide="chevrons-right" class="toggle-icon-expand"></i>
+                </button>
             </div>
         </aside>
 
         <!-- =================================================================
             MAIN CONTENT AREA
         ================================================================== -->
-        <main class="flex-1 p-8 overflow-y-auto bg-gray-50 dark:bg-gray-800/50">
+        <main class="flex-1 p-8 overflow-y-auto bg-gray-50 dark:bg-gray-800/50 transition-all duration-300">
             
             <!-- OVERVIEW PAGE -->
             <div id="overview-page" class="page-content">
-                <header class="mb-8">
-                    <h1 id="welcome-message" class="text-3xl font-bold text-gray-900 dark:text-white">Welcome back, Saranya</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-1">Here's an overview of all of your balances.</p>
-                </header>
+                <div class="flex justify-between items-start mb-8">
+                    <header>
+                        <h1 id="welcome-message" class="text-3xl font-bold text-gray-900 dark:text-white">Welcome back, Saranya</h1>
+                        <p class="text-gray-500 dark:text-gray-400 mt-1">Here's an overview of all of your balances.</p>
+                    </header>
+                    <img src="https://placehold.co/40x40/C4B5FD/6D28D9?text=S" alt="Saranya's Profile" class="w-10 h-10 rounded-full">
+                </div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <div class="lg:col-span-2">
                         <!-- Account Balance Card -->
@@ -171,9 +200,6 @@
                         </div>
                     </div>
                     <div class="lg:col-span-1">
-                        <div class="flex justify-end items-center space-x-6 mb-8">
-                            <img src="https://placehold.co/40x40/E2E8F0/4A5568?text=S" alt="Saranya's Profile" class="w-10 h-10 rounded-full">
-                        </div>
                         <div class="space-y-6">
                            <!-- Total Balance Card -->
                             <div class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm relative">
@@ -901,6 +927,7 @@
                 renderBudgetsPage();
                 renderIncomePage();
                 loadTheme();
+                loadSidebarState();
             }
 
 
@@ -1968,7 +1995,6 @@
                 renderTransactions();
              });
 
-
             // --- REPORTS PAGE LOGIC ---
             let spendingByCategoryChart, incomeVsExpenseChart, totalSpendingTrendChart, categorySpendingTrendChart;
 
@@ -2247,6 +2273,25 @@
             themeDarkBtn.addEventListener('click', () => {
                 localStorage.setItem('theme', 'dark');
                 applyTheme('dark');
+            });
+
+            // --- SIDEBAR TOGGLE LOGIC ---
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const body = document.body;
+
+            const loadSidebarState = () => {
+                if(localStorage.getItem('sidebarCollapsed') === 'true') {
+                    body.classList.add('sidebar-collapsed');
+                }
+            }
+
+            sidebarToggle.addEventListener('click', () => {
+                body.classList.toggle('sidebar-collapsed');
+                if (body.classList.contains('sidebar-collapsed')) {
+                    localStorage.setItem('sidebarCollapsed', 'true');
+                } else {
+                    localStorage.setItem('sidebarCollapsed', 'false');
+                }
             });
 
 
