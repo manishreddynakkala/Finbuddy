@@ -210,17 +210,6 @@
                                         </div>
                                         <span class="font-semibold text-gray-900 dark:text-white">Total Balance</span>
                                     </div>
-                                    <button data-account="total" class="account-menu-btn text-gray-400 hover:text-gray-600"><i data-lucide="more-horizontal" class="w-5 h-5 pointer-events-none"></i></button>
-                                    <div data-dropdown="total" class="account-dropdown absolute top-10 right-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-xl w-40 hidden z-10">
-                                        <ul>
-                                            <li>
-                                                <button data-account="total" class="update-account-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center space-x-2">
-                                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
-                                                    <span>Update Balance</span>
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
                                </div>
                                <p id="total-balance-amount" class="text-3xl font-bold mt-4 text-gray-900 dark:text-white"></p>
                             </div>
@@ -856,7 +845,8 @@
                 income: [],
                 incomeSources: [],
                 get totalBalance() {
-                    return this.accounts.reduce((sum, acc) => sum + parseFloat(acc.balance), 0);
+                    // Correctly calculates total balance as Main Account + Sum of Savings Goals
+                    return this.mainAccountBalance + this.savingsBalance;
                 },
                  get mainAccountBalance() {
                     const main = this.accounts.find(a => a.account_name === 'Main Account');
@@ -1055,9 +1045,7 @@
                     const account = btn.dataset.account;
                     btn.closest('.account-dropdown').classList.add('hidden');
                     let title = "Update Balance";
-                    if (account === 'total') title = 'Update Total Balance';
                     if (account === 'main') title = 'Update Main Account Balance';
-                    if (account === 'savings') title = 'Update Savings Balance';
                     updateAccountModalTitle.textContent = title;
                     updateAccountBalanceForm.dataset.accountToUpdate = account;
                     showModal('update-account-balance-modal');
